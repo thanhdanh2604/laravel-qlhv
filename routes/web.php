@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ban_tin;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+// Route::get('/', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
+Route::get('/', [ban_tin::class, 'show'])->middleware('auth')->name('/');
+
+// Route::get('/ban_tin',function(){
+//     return view('ban_tin');
+// });
 require __DIR__.'/auth.php';
