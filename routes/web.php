@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 use App\Http\Controllers\ban_tin;
@@ -11,6 +12,9 @@ use App\Http\Controllers\api;
 
 
 >>>>>>> Stashed changes
+=======
+use App\Http\Controllers\ban_tin;
+>>>>>>> laravel-qlhv1
 
 /*
 |--------------------------------------------------------------------------
@@ -25,15 +29,22 @@ use App\Http\Controllers\api;
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('/', [ban_tin::class, 'index'])->name('/');
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 Route::get('/', function () {
     return view('welcome');
 });
+=======
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+>>>>>>> laravel-qlhv1
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+// Route::get('/', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
+<<<<<<< HEAD
 =======
     Route::prefix('teachers')->group(function () {
         Route::get('/', [teacher::class, 'index'])->name('teachers');
@@ -73,4 +84,11 @@ Route::get('/fix_nested_object', [teaching_recording::class,'fix_nested_object']
 Route::get('/get_number_of_like',[api::class,'get_number_of_like']);
 
 >>>>>>> Stashed changes
+=======
+Route::get('/', [ban_tin::class, 'show'])->middleware('auth')->name('/');
+
+// Route::get('/ban_tin',function(){
+//     return view('ban_tin');
+// });
+>>>>>>> laravel-qlhv1
 require __DIR__.'/auth.php';

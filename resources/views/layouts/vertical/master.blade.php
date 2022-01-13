@@ -7,14 +7,29 @@
       <meta name="description" content="Poco admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
       <meta name="keywords" content="admin template, Poco admin template, dashboard template, flat admin template, responsive admin template, web app">
       <meta name="author" content="pixelstrap">
+<<<<<<< HEAD
       <link rel="icon" href="{{asset('assets/images/favicon.ico')}}" type="image/x-icon">
       <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}" type="image/x-icon">
       <title>Intertu - @yield('title')</title>
+=======
+      <link rel="icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
+      <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
+      <title>Poco - @yield('title')</title>
+>>>>>>> laravel-qlhv1
       @include('layouts.vertical.css')
       @yield('style')
    </head>
    <body>
+<<<<<<< HEAD
 
+=======
+      <!-- Loader starts-->
+      <div class="loader-wrapper">
+         <div class="typewriter">
+            <h1>New Era Admin Loading..</h1>
+         </div>
+      </div>
+>>>>>>> laravel-qlhv1
       <!-- Loader ends-->
       <!-- page-wrapper Start-->
       <div class="page-wrapper vertical">
@@ -29,8 +44,13 @@
             <!-- Right sidebar Start-->
             @include('layouts.vertical.chat_sidebar')
             <!-- Right sidebar Ends-->
+<<<<<<< HEAD
             <div class="page-body vertical-menu-mt p-t-30">
                {{-- <div class="container-fluid">
+=======
+            <div class="page-body vertical-menu-mt">
+               <div class="container-fluid">
+>>>>>>> laravel-qlhv1
                   <div class="page-header">
                      <div class="row">
                         <div class="col-lg-6 main-header">
@@ -45,13 +65,23 @@
                         </div>
                      </div>
                   </div>
+<<<<<<< HEAD
                </div> --}}
+=======
+               </div>
+>>>>>>> laravel-qlhv1
                <!-- Container-fluid starts-->
                @yield('content')
                <!-- Container-fluid Ends-->
             </div>
          </div>
       </div>
+<<<<<<< HEAD
       @include('layouts.vertical.script')
    </body>
 </html>
+=======
+      @include('layouts.vertical.script') 
+   </body>
+</html>
+>>>>>>> laravel-qlhv1

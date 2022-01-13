@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+<<<<<<< HEAD
 
 class ban_tin extends Controller
 {
@@ -81,5 +82,19 @@ class ban_tin extends Controller
     public function destroy($id)
     {
         //
+=======
+use App\Models\teaching_recording;
+use App\Models\student;
+
+class ban_tin extends Controller
+{
+    //
+    public function show(){
+        //Lấy data từ modal
+        return student::all();
+
+        //Gọi views
+        return view('pages.vertical');
+>>>>>>> laravel-qlhv1
     }
 }

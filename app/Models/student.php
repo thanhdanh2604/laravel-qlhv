@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\DB;
 
 class student extends Model
@@ -16,4 +17,10 @@ class student extends Model
     }
 
 
+=======
+
+class student extends Model
+{
+    use HasFactory;
+>>>>>>> laravel-qlhv1
 }

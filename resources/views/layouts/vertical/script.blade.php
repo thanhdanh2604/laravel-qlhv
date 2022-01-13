@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> laravel-qlhv1
 <script src="{{asset('assets/js/jquery-3.5.1.min.js')}}"></script>
 <!-- Bootstrap js-->
 <script src="{{asset('assets/js/bootstrap/popper.min.js')}}"></script>
@@ -24,5 +27,9 @@
 <script src="{{asset('assets/js/jquery.drilldown.js')}}"></script>
 <script src="{{asset('assets/js/vertical-menu.js')}}"></script>
 <script src="{{asset('assets/js/megamenu.js')}}"></script>
+<<<<<<< HEAD
 <!-- Plugin used-->
 
+=======
+<!-- Plugin used-->
+>>>>>>> laravel-qlhv1
