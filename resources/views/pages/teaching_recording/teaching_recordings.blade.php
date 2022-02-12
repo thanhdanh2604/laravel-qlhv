@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\teaching_recording;
+ use App\Http\Controllers\teaching_recording\details_teaching_recording;
 ?>
 @extends('layouts.vertical.master')
 @section('title', 'Teaching recording')
@@ -195,7 +195,7 @@ use App\Http\Controllers\teaching_recording;
                                 <td>
                                     @if($teaching_recording->ma_lop!=null)
                                     @php
-                                        $array_time_study =teaching_recording::getStudyInfo($teaching_recording->id);
+                                        $array_time_study = details_teaching_recording::getStudyInfo($teaching_recording->id);
                                         if($array_time_study['time_left']<=6){
                                             echo "<span class=\"badge badge-danger\">".$array_time_study['time_left']." Hours</span>";
                                         }else{

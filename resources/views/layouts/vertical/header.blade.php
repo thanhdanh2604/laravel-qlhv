@@ -1,11 +1,8 @@
 <div class="page-main-header">
    <div class="main-header-right">
       <div class="main-header-left text-center">
-<<<<<<< HEAD
+
          <div class="logo-wrapper"><a href="{{route('/')}}"><img width="100px" src="{{asset('assets/images/logo/logo.png')}}" alt=""></a></div>
-=======
-         <div class="logo-wrapper"><a href="{{route('/')}}"><img src="{{asset('assets/images/logo/logo.png')}}" alt=""></a></div>
->>>>>>> laravel-qlhv1
       </div>
       <div class="mobile-sidebar d-none">
          <div class="media-body text-right switch-sm">

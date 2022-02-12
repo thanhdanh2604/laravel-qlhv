@@ -11,11 +11,9 @@ setTimeout(function(){
 
             // With Placeholder
             $(".js-example-placeholder-multiple").select2({
-<<<<<<< HEAD
+
                 placeholder: "Click vào để chọn!"
-=======
-                placeholder: "Select Your Name"
->>>>>>> laravel-qlhv1
+
             });
 
             //Limited Numbers
@@ -40,7 +38,6 @@ setTimeout(function(){
             $(".js-programmatic-disable").on("click", function() {
                 $(".js-example-disabled").prop("disabled", true);
             });
-<<<<<<< HEAD
             $('#mySelect2').select2({
                 dropdownParent: $('#add_new_teacher'),
                 allowClear: true,
@@ -55,8 +52,3 @@ setTimeout(function(){
         })(jQuery);
     }
     ,350);
-=======
-        })(jQuery);
-    }
-    ,350);
->>>>>>> laravel-qlhv1

@@ -1,18 +1,12 @@
 $(document).ready(function() {
     $('product-list').DataTable();
-<<<<<<< HEAD
+
     // Basic table example
-    $('#basic-1').DataTable();
-    $('#basic-2').DataTable({
-        "paging":   true
-=======
-    // Basic table example 
     $('#basic-1').DataTable();
     $('#basic-2').DataTable({
         "paging":   true,
         "ordering": false,
         "info":     false
->>>>>>> laravel-qlhv1
     });
     $('#basic-3').DataTable({
         "order": [[ 3, "desc" ]]
@@ -396,11 +390,9 @@ $(document).ready(function() {
         alert(srow.rows('.selected').data().length + ' row(s) selected');
     });
     //row select multiple data table end here
-<<<<<<< HEAD
+
     //single row delete data table start here
-=======
-    //single row delete data table start here        
->>>>>>> laravel-qlhv1
+
     var deleterow = $('#row-select-delete').DataTable();
     $('#row-select-delete tbody').on('click', 'tr', function() {
         if ($(this).hasClass('selected')) {
@@ -413,11 +405,8 @@ $(document).ready(function() {
     $('#single-row-delete-btn').on('click', function() {
         deleterow.row('.selected').remove().draw(!1);
     });
-<<<<<<< HEAD
+
     //single row delete data table end here
-=======
-    //single row delete data table end here        
->>>>>>> laravel-qlhv1
     //form input submit start here
     var table = $('#form-input-datatable').DataTable();
     $('#form-input-datatable-submit').on('click', function() {
@@ -447,21 +436,13 @@ $(document).ready(function() {
         filterColumn($(this).parents('tr').attr('data-column'));
     });
     //seach API regular expression start
-<<<<<<< HEAD
+
     //Ajax Data Source (Arrays) start
     $('#ajax-data-array').DataTable({
         "ajax": "../assets/ajax/arrays.txt",
     });
     //Ajax Data Source (Arrays) start
-    //Ajax Data Source (object) start
-=======
-    //Ajax Data Source (Arrays) start 
-    $('#ajax-data-array').DataTable({
-        "ajax": "../assets/ajax/arrays.txt",
-    });
-    //Ajax Data Source (Arrays) start 
-    //Ajax Data Source (object) start             
->>>>>>> laravel-qlhv1
+
     $('#ajax-data-object').DataTable({
         "ajax": "../assets/ajax/object.txt",
         "columns": [{
@@ -478,13 +459,9 @@ $(document).ready(function() {
             "data": "salary"
         }]
     });
-<<<<<<< HEAD
+
     //Ajax Data Source (object) end
     //Ajax nested object data start
-=======
-    //Ajax Data Source (object) end 
-    //Ajax nested object data start 
->>>>>>> laravel-qlhv1
     $('#ajax-data-nested-object').DataTable({
         "processing": true,
         "ajax": "../assets/ajax/object_nested.txt",
@@ -502,11 +479,8 @@ $(document).ready(function() {
                 "data": "hr.salary"
         }]
     });
-<<<<<<< HEAD
     //Ajax nested object data start
-=======
-    //Ajax nested object data start 
->>>>>>> laravel-qlhv1
+
     //Ajax orthogonal data start here
     $('#orthogonal-data').DataTable({
         ajax: "../assets/ajax/orthogonal.txt",
@@ -554,11 +528,8 @@ $(document).ready(function() {
         "serverSide": true,
         "ajax": "../assets/ajax/server-processing.php"
     });
-<<<<<<< HEAD
+
     //http server side datatable start
-=======
-    //http server side datatable start   
->>>>>>> laravel-qlhv1
     $('#datatable-http').DataTable({
         "processing": true,
         "serverSide": true,
@@ -567,26 +538,16 @@ $(document).ready(function() {
             data: function(d) {
                 d.myKey = "myValue";
             }
-<<<<<<< HEAD
+
         },
-=======
-        },  
->>>>>>> laravel-qlhv1
         "columns": [{
             "data": "first_name"
         }, {
             "data": "last_name"
-<<<<<<< HEAD
         }, {
             "data": "position"
         }, {
             "data": "office"
-=======
-        }, {    
-            "data": "position"
-        }, {
-            "data": "office"    
->>>>>>> laravel-qlhv1
         }, {
             "data": "start_date"
         }, {
@@ -658,11 +619,7 @@ $(document).ready(function() {
     $('#min, #max').keyup(function() {
         dtage.draw();
     });
-<<<<<<< HEAD
     //Range plugin datatable end here
-=======
-    //Range plugin datatable end here    
->>>>>>> laravel-qlhv1
     //datatable dom ordering start here
     $.fn.dataTable.ext.order['dom-text'] = function(settings, col) {
         return this.api().column(col, {
@@ -684,11 +641,7 @@ $(document).ready(function() {
         }).nodes().map(function(td, i) {
             return $('select', td).val();
         });
-<<<<<<< HEAD
     }
-=======
-    }   
->>>>>>> laravel-qlhv1
     $.fn.dataTable.ext.order['dom-checkbox'] = function(settings, col) {
         return this.api().column(col, {
             order: 'index'
@@ -710,9 +663,4 @@ $(document).ready(function() {
     });
     //datatable dom ordering end here
 
-
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> laravel-qlhv1
