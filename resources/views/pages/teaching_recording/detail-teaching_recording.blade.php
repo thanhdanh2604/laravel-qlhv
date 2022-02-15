@@ -105,7 +105,7 @@
                                     $stt=1;
                                 @endphp
                                 @foreach ($obj_mon_hoc->lich_hoc_du_kien as $buoi_hoc)
-                                        <tr>
+                                        <tr id="{{$buoi_hoc->time}}">
                                             <td>@php echo $stt; $stt++; @endphp</td>
                                             <td>
                                                 <div class="f-w-700 f-c-red">{{ $buoi_hoc->date}}</div>
@@ -163,7 +163,8 @@
                                                 @endphp Giờ </span></p>
                                             </td>
                                             <td>
-                                                <div class="btn btn-danger">Xóa {{$buoi_hoc->time}}</div>
+
+                                                <div id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$buoi_hoc->id_subject}}" id_teacher="{{$buoi_hoc->id_prof}}" class="button__delete btn btn-danger">Xóa </div>
                                             </td>
                                         </tr>
                                 @endforeach
@@ -461,6 +462,19 @@ alert('{{ $error }}')
 
 @section('script')
 <script>
+    // bắt sự kiện click nút delete và gửi ajax
+    document.querySelectorAll('.button__delete').forEach(e=>{
+        e.addEventListener('click',function(){
+                object_param={
+                    id_nkgd:e.getAttribute("id_nkgd"),
+                    time: e.getAttribute("time"),
+                    id_subject:e.getAttribute("id_subject"),
+                    id_teacher:e.getAttribute("id_teacher")
+                }
+                let url = '{{route('delete_day')}}';
+                    ajax_get_custom(object_param,url,e.getAttribute("time"));
+            })
+    })
     //Bắt sự kiện click vào submit để điền json lịch học vô input json_lich_hoc
     document.querySelector('#them_nhieu_buoi [type=submit]').addEventListener("click",tao_json_lich_hoc)
     function tao_json_lich_hoc(){

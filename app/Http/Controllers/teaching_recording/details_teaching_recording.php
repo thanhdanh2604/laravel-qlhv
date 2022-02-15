@@ -217,7 +217,7 @@ class details_teaching_recording extends Controller
         $id_subject = $request->input('id_subject');
         $id_teacher = $request->input('id_teacher');
         $time = $request->input('time');
-
+        $status = 'false';
         // Lấy dữ liệu teaching history cũ
         $data_teaching_recording = M_teaching_recording::find($request->input('id_nkgd'));
 
@@ -228,7 +228,8 @@ class details_teaching_recording extends Controller
                 foreach ($mon_hoc->lich_hoc_du_kien as $key=>$buoi_hoc) {
                     if($time == $buoi_hoc->time){
                         // unset($mon_hoc->lich_hoc_du_kien[$key]);// Không sử dụng unset vì khi json encode nó tự ghi khóa vào
-                        array_slice($mon_hoc->lich_hoc_du_kien,$key,1);
+                        array_splice($mon_hoc->lich_hoc_du_kien,$key,1);
+                        $status = 'success';
                         break;
                     }else{
                         continue;
@@ -239,6 +240,9 @@ class details_teaching_recording extends Controller
         $new_json = json_encode($obj_teaching_history);
         $data_teaching_recording->teaching_history = $new_json;
         $data_teaching_recording->save();
+        return response()->json([
+            'status' => $status
+        ]);
     }
     /*
     * Đây là hàm fix lại chuỗi json teaching history khắc phục các vấn đề cũ, khi đưa lên hosting nhớ chạy ctrinh này trước
