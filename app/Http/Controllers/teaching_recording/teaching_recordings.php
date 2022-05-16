@@ -8,6 +8,7 @@ use App\Http\Controllers\teaching_recording\details_teaching_recording;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\M_teaching_recording;
+use App\Models\student;
 
 class teaching_recordings extends Controller
 {
@@ -22,9 +23,7 @@ class teaching_recordings extends Controller
         $data = DB::table('teaching_recording')->orderBy('id', 'desc')->get();
         $data_student = DB::table('student')->pluck('full_name','id_student');
         $data_teacher = DB::table('teacher')->pluck('fullname','id_teacher');
-        // $data =array();
-        // $data_student = array();
-        // $data_teacher = array();
+
         return view('pages.teaching_recording.teaching_recordings',[
             'teaching_recordings'=>$data,
             'students'=>$data_student,
@@ -63,10 +62,14 @@ class teaching_recordings extends Controller
         $ma_lop = $request->input('ma_lop');
         switch ($type) {
             case 1:
-                $student = $request->input('student');
+                $student = $request->input('student');//lớp 1-1
                 break;
             case 2:
                 $student = json_encode($request->input('group_student'));
+                break;
+                //Lớp group
+            case 0:
+                $student = $request->input('student');//lớp trail
                 break;
             default:
                 die("Sai type Class!");
@@ -103,20 +106,43 @@ class teaching_recordings extends Controller
         }
 
         switch ($data_teaching_recording->type) {
-            case 1:
+            case 0: // Lớp group
                 $data_student = DB::table('student')->where('id_student',$data_teaching_recording->id_student)->first();
+                $allStudent = student::all();
                 return view('pages.teaching_recording.detail-teaching_recording',[
                     'teaching_recording'=>$data_teaching_recording,
                     'obj_teaching_history'=>$data_teaching_history_sort,
                     'subjects'=>$data_subject,
                     'study_info'=>$data_study_info,
                     'teachers'=>$data_teacher,
-                    'students'=>$data_student
+                    'students'=>$data_student,
+                    'allStudent'=> $allStudent
                 ]);
                 break;
-            case 2:
-                $data_student = array();
-                return view('pages.teaching_recording.detail-group-teaching_recording',['teaching_recording'=>$data_teaching_recording,'subjects'=>$data_subject,'study_info'=>$data_study_info,'teachers'=>$data_teacher,'students'=>$data_student]);
+            case 1: // Lớp 1-1
+                $data_student = DB::table('student')->where('id_student',$data_teaching_recording->id_student)->first();
+                $allStudent = student::all();
+                return view('pages.teaching_recording.detail-teaching_recording',[
+                    'teaching_recording'=>$data_teaching_recording,
+                    'obj_teaching_history'=>$data_teaching_history_sort,
+                    'subjects'=>$data_subject,
+                    'study_info'=>$data_study_info,
+                    'teachers'=>$data_teacher,
+                    'students'=>$data_student,
+                    'allStudent'=> $allStudent
+                ]);
+                break;
+            case 2: // Lớp Group
+
+                $data_student = student::all();
+                return view('pages.teaching_recording.detail-group-teaching_recording',
+                [
+                    'teaching_recording'=>$data_teaching_recording,
+                    'subjects'=>$data_subject,
+                    'study_info'=>$data_study_info,
+                    'teachers'=>$data_teacher,
+                    'students'=>$data_student
+                ]);
             default:
                 die("Dữ liệu lỗi!");
                 break;
@@ -130,14 +156,19 @@ class teaching_recordings extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,$column,$id)
+    public function edit(Request $request)
     {
-        //Xử lý cập nhập trường nhất định trong table
-        $data_column = $request->input($column);
-        DB::table('teaching_recording')->where('id', $id)
-                    ->update([$column=>$data_column]);
+        $id_nkgd = $request->input('id_nkgd');
+        $key = $request->input('key');
+        $key_value = $request->input('key_value');
 
-         return redirect()->route('teaching_recording_detail',['id' => $id]);
+
+        DB::table('teaching_recording')->where('id', $id_nkgd)
+                    ->update([$key=>$key_value]);
+
+        return response()->json([
+            'status'=>'success'
+        ]);
     }
 
     /**

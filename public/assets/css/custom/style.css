@@ -1,0 +1,10 @@
+  /* Custom today class */
+  .morning_panel{
+    border-left: 10px solid yellow ;
+}
+.noon_panel{
+  border-left: 10px solid orangered ;
+  }
+  .night_panel{
+  border-left: 10px solid black ;
+  }

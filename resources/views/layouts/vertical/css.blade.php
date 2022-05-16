@@ -22,4 +22,8 @@
 <!-- Responsive css-->
 
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/responsive.css')}}">
+{{-- Custom css --}}
+
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/custom/style.css')}}">
+
 

@@ -13,9 +13,7 @@ setTimeout(function(){
             $(".js-example-placeholder-multiple").select2({
 
                 placeholder: "Click vào để chọn!"
-
             });
-
             //Limited Numbers
             $(".js-example-basic-multiple-limit").select2({
                 maximumSelectionLength: 2
@@ -47,7 +45,16 @@ setTimeout(function(){
             $("#p-p_class,#group_class").select2();
 
             $('#p-p_class,#group_class').select2({
-                dropdownParent: $('#add_new_teaching_recording'),
+                dropdownParent: $('#add_new_teaching_recording')
+            });
+            $('#pick_teacher').select2({
+                dropdownParent: $('#modal_them-giao-vien')
+            });
+            $('#get_id_packet').select2({
+                dropdownParent: $('#modal_them-giao-vien')
+            });
+            $('#pick_student').select2({
+                dropdownParent: $('#transfer_money')
             });
         })(jQuery);
     }

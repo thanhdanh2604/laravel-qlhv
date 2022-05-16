@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectRowTeacher extends Migration
+class RenameRenew extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateSubjectRowTeacher extends Migration
      */
     public function up()
     {
-
-            Schema::create('teacher', function (Blueprint $table) {
-                $table->string('teaching_subject');
-            });
-
+        //
+        Schema::table('teaching_recording', function (Blueprint $table) {
+            $table->renameColumn('edit_history','renew_history');
+        });
     }
 
     /**
@@ -27,10 +26,6 @@ class CreateSubjectRowTeacher extends Migration
      */
     public function down()
     {
-
-            Schema::create('teacher', function (Blueprint $table) {
-                $table->dropColumn('teaching_subject');
-            });
-
+        //
     }
 }

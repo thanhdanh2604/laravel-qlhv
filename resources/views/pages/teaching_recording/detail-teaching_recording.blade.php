@@ -1,5 +1,5 @@
 @extends('layouts.vertical.master')
-@section('title', 'Teachers')
+@section('title', 'Details Teaching Recording')
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/teaching_recording_style.css') }}">
@@ -47,37 +47,250 @@
         @if($teaching_recording->teaching_history!=null)
           <div class="card">
                 <div class="header_teaching_recording p-15">
-                    <div style="display:none">
-                        <label>Tổng thời gian:</label>
-                        <input type="text" id="total_hours" value="{{$teaching_recording->total_hours}}" placeholder="">
-                        <div onclick="ajax_save_total_hour()" class="btn btn-primary">Lưu giờ</div>
+                    <div style="">
+                        <h3>Tổng thời gian:</h3>
+                        <div style="color:green;font-size:30px;font-weight: 900">{{$teaching_recording->total_hours}} Giờ</div><div style='font-size:20px'></div>
+                        <p>
+                            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#total_hours_toggle" aria-expanded="false"
+                                    aria-controls="total_hours_toggle">
+                                Edit
+                            </button>
+                        </p>
+                        <div class="collapse" id="total_hours_toggle">
+                            <input id_nkgd="{{$teaching_recording->id}}" key="total_hours" title="Bấm Enter để lưu!" type="text" id="total_hours" value="{{$teaching_recording->total_hours}}" placeholder="">
+                            <span id="luu_gio_messenge" class="txt-success f-w-900 "></span>
+                        </div>
                     </div>
                     <div>
                         <button data-toggle="modal" data-target="#renew" class="btn btn-info" type="button" data-original-title="" title="">Renew</button>
                     </div>
                     <div class="gio_da_hoc">
                         <h3>Giờ đã học</h3>
-                        <span style="color:blue;font-size:30px;font-weight: 900">{{$study_info['study_hours']}} Giờ</span><span style='font-size:20px'></span>
+                        <div style="color:blue;font-size:30px;font-weight: 900">{{$study_info['study_hours']}} Giờ</div><div style='font-size:20px'></div>
                     </div>
                     <div class="gio_con_lai">
                         <h3>Thời gian còn lại</h3>
-                        <span style="@php if($study_info['time_left']<=6){ echo "color:red"; }else{ echo "color:green";} @endphp;font-size:30px;font-weight: 900"> {{$study_info['time_left']}} Giờ</span>
+                        <div id="time_left" style="@php if($study_info['time_left']<=6){ echo "color:red"; }else{ echo "color:green";} @endphp;font-size:30px;font-weight: 900"> {{$study_info['time_left']}} Giờ</div>
+                        <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bao_luu_hoc_phi">Bảo lưu</div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="bao_luu_hoc_phi" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Bảo lưu học phí</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" hidden name="reserve_id_nkgd" value="{{$teaching_recording->id}}">
+                                        <input type="text" hidden name="reserve_id_student" value="{{$teaching_recording->id_student}}">
+
+                                        @php
+                                            if($teaching_recording->renew_history!=null){
+                                                $obj_history_renew = json_decode($teaching_recording->renew_history);
+                                                $lenghtOfArray = count($obj_history_renew);
+                                                $amountOfmonneyPerHour = $obj_history_renew[$lenghtOfArray-1]->so_tien/$obj_history_renew[$lenghtOfArray-1]->so_gio;
+                                            }
+                                        @endphp
+                                        <div class="alert alert-warning outline">
+                                            <p>Hiện tại bé còn <strong>{{$study_info['time_left']}} giờ </strong></p>
+                                        </div>
+                                        <p id="error_display"></p>
+                                        <div class="form-group">
+                                            <label>Gói giờ hiện tại có số tiền / 1 giờ là (Lấy theo gói giờ gần nhất)</label>
+                                            <input readonly="readonly" class="form-control reserve__select" type="text" name="reserve_amountPerHour" value="{{isset($amountOfmonneyPerHour)?$amountOfmonneyPerHour:0}}">
+
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="">Thời gian còn lại</label>
+                                          <input class="form-control reserve__select" name="reserve_timeLeft" value="{{$study_info['time_left']}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tổng số tiền bảo lưu là</label>
+                                            <input class="form-control reserve__select" type="text" name="reserve_amountOfMonney" id="" value="@if(isset($amountOfmonneyPerHour)){{$amountOfmonneyPerHour*$study_info['time_left'] }}@endif">
+                                        </div>
+                                        <div class="alert alert-success">
+                                            <strong>Chú ý:</strong> Số giờ còn lại sẽ chuyển qua tiền
+                                        </div>
+                                        <script>
+
+                                        </script>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary button__resever">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="so_tien_bao_luu">
                         <h3 >Số tiền bảo lưu</h3>
-                        <span style="color:black;font-size:30px;font-weight: 900">{{number_format($students->reserve)}} VNĐ</span>
+                        <div style="color:black;font-size:30px;font-weight: 900">{{number_format($students->reserve)}} VNĐ</div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                        Action
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                <div class="dropdown-item" data-toggle="modal" data-target="#from_money_to_hours" href="#">Đổi lại thành giờ</div>
+
+                                <div class="dropdown-item "  data-toggle="modal" data-target="#transfer_money">Chuyển cho học sinh khác</div>
+                            </div>
+                        </div>
+                        <!-- Modal đổi giờ thành tiền bảo lưu -->
+                        <div class="modal fade" id="from_money_to_hours" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Đổi tiền thành giờ</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" hidden id="covert_id_nkgd" value="{{$teaching_recording->id}}">
+                                        <input type="text" hidden id="convert_id_student" value="{{$teaching_recording->id_student}}">
+                                        <div class="form-group">
+                                            <label for="">Số tiền cần chuyển</label>
+                                          <input type="text" class="form-control money_to_hours" value="{{$students->reserve}}" id="so_tien_can_chuyen" aria-describedby="helpId" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="">Số tiền / giờ</label>
+                                          <input type="text"
+                                            class="form-control money_to_hours" name="" id="so_tien_tren_gio" aria-describedby="helpId" placeholder="" value="{{isset($amountOfmonneyPerHour)?$amountOfmonneyPerHour:0}}">
+                                          <small id="helpId" class="form-text text-muted">Mặc định sẽ lấy ở gói giờ gần nhất</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Số giờ</label>
+                                            <input type="text"
+                                              class="form-control" name="" id="covert_so_gio" aria-describedby="helpId" placeholder="" value="@if(isset($amountOfmonneyPerHour)){{$students->reserve/$amountOfmonneyPerHour}}@endif">
+                                            <small id="helpId" class="form-text text-muted">Số giờ sau khi tính</small>
+                                          </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary btn-covert-money from_revenue_to_hours">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal chuyển giờ bảo lưu cho học sinh khác -->
+
+                        <div class="modal fade" id="transfer_money" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Transfer Money</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input id="transfer_id_source_student" type="hidden" name="" value="{{$teaching_recording->id_student}}">
+                                        <div class="form-group">
+                                          <label for="">Tiền chuyển</label>
+                                          <input type="text" value="{{$students->reserve}}" class="form-control" name="" id="transfer_amount_money" aria-describedby="helpId" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Chọn học sinh để chuyển tiền:</label>
+                                            <select id="transfer_id_des_student" style="width:100%" class="form-control" name="" id="pick_student">
+                                                <option selected disabled value="">Select transfer Student</option>
+                                                @foreach($allStudent as $student)
+                                                <option value="{{$student->id_student}}">{{$student->full_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-primary button___transfer_reserve">Transfer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-square btn-info" type="button" type="button" data-toggle="collapse" data-target="#nhatkydongtien" aria-expanded="false" aria-controls="collapseExample">Lịch sử renew gói</button>
+                    </div>
+                </div>
+                <div class="collapse" id="nhatkydongtien">
+                    <div class="card card-body">
+                      <table class="table">
+                          <thead>
+                            <tr>
+                                <th>Số hóa đơn</th>
+                                <th>Số giờ</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày nhận</th>
+                                <th>Số Tiền</th>
+                                <th>Bảo lưu</th>
+                                <th>Tiền / Giờ</th>
+                                <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              @if($teaching_recording->renew_history!=null)
+                                @forEach(json_decode($teaching_recording->renew_history) as $key=>$renew)
+                                <tr id="renew_{{$key}}">
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="so_hoa_don" value="{{$renew->so_hoa_don}}" class="form-control renew__edit" type="text" placeholder="{{$renew->so_hoa_don}}">
+                                        </td>
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="so_gio" value="{{$renew->so_gio}}" class="form-control renew__edit"  type="text" placeholder="{{$renew->so_gio}}"></td>
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="ngay_bat_dau" value="{{$renew->ngay_bat_dau}}" class="form-control renew__edit"  type="date" placeholder="{{$renew->ngay_bat_dau}}"></td>
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="ngay_nhan" value="{{$renew->ngay_nhan}}" class="form-control renew__edit" type="date" placeholder="{{$renew->ngay_nhan}}"></td>
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="so_tien" value="{{$renew->so_tien}}" class="form-control renew__edit"  type="text" placeholder="{{$renew->so_tien}}"></td>
+                                    <td>
+                                        <input title="Bấm Enter để lưu!" id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" key_name="bao_luu" value="{{isset($renew->bao_luu)?$renew->bao_luu:0}}" class="form-control renew__edit"  type="text" placeholder="{{isset($renew->bao_luu)?$renew->bao_luu:0}}"></td>
+                                    <td>
+                                        <span id="{{$key}}_sotientrengio" class="txt-primary">
+                                            @php
+                                                $amountMoney = isset($renew->bao_luu)?($renew->bao_luu+$renew->so_tien):$renew->so_tien;
+                                                $amountMoneyPerHours = $amountMoney /$renew->so_gio;
+                                            @endphp
+                                            {{number_format($amountMoneyPerHours)}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button id_nkgd="{{$renew->ma_nkgd}}" key="{{$key}}" type="button" class="btn btn-outline-danger renew__delete">X</button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                              @endif
+                          </tbody>
+                          <tfoot>
+                              <div id="alert_renew_history" class="alert alert-primary outline m-t-15" role="alert">
+                                Nếu chỉnh sửa ngày, học phí trong phần này, phải bấm nút <strong class="txt-primary">"ĐỒNG BỘ LẠI DOANH THU"</strong> để đồng bộ lại thời gian và doanh thu mới chỉnh sửa
+                            </div>
+                          </tfoot>
+                      </table>
+                      <button id_nkgd="{{$teaching_recording->id}}" id="syns_revenue" type="button" class="btn btn-primary">Đồng bộ lại doanh thu</button>
                     </div>
                 </div>
           </div>
         @endif
-        {{-- Phần hiển thị nhật ký giảng dạy dạng tab --}}
         <div class="card border-primary">
             <div class="card-body">
                 @if($teaching_recording->teaching_history!=null)
                     @foreach ($obj_teaching_history as $obj_mon_hoc)
-                        <caption><span class="f-w-900">{{$teachers[$obj_mon_hoc->ma_giao_vien]}}</span> ---
-                        <span class="f-w-900 text-danger">{{$subjects[$obj_mon_hoc->ma_mon]}}</span></caption>
-                        <table id="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}" class="table">
+                    @if(!isset($obj_mon_hoc->finish))
+                    @php
+                   $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                    @endphp
+                    <div id="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                {{array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher'}}
+                                <span class="f-w-900">{{$teacher_name}}</span> ---
+                                <span class="f-w-900 text-danger">{{$subjects[$obj_mon_hoc->ma_mon]}}</span>
+                            </div>
+                            <div id_nkgd="{{$teaching_recording->id}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" finish="true" class="btn btn-sm btn-outline-primary f-right button__finish-subject">  Finish Subject</div>
+                            <div id_nkgd="{{$teaching_recording->id}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" class="btn btn-sm btn-dark f-right button__delete-subject">Xóa môn</div>
+                        </div>
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -94,8 +307,8 @@
                                 <tr>
                                     <td style="text-align:center" class="middle" colspan="7">
                                         <div class="btn-group f-center" role="group" aria-label="Basic example">
-                                            <button class="btn btn-success" type="button">Thêm 1 buổi</button>
-                                            <button class="btn btn-primary" type="button">Thêm nhiều buổi</button>
+                                            <button class="btn btn-success" type="button"data-toggle="modal" data-target="#modalthem1buoi">Thêm 1 buổi</button>
+                                            <button data-toggle="modal" data-target="#them_nhieu_buoi" class="btn btn-primary" type="button">Thêm nhiều buổi</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -117,13 +330,13 @@
                                                 @endphp
                                             </td>
                                             <td>
-                                                <p>TEACHER: <a class="f-w-900 " href="/teachers/detail/{{$obj_mon_hoc->ma_giao_vien}}">{{$teachers[$obj_mon_hoc->ma_giao_vien]}}</a>
+                                                <p>TEACHER: <a class="f-w-900 " href="/teachers/detail/{{$obj_mon_hoc->ma_giao_vien}}">{{$teacher_name}}</a>
                                                 </p>
                                                 <p>SUBJECT: <a class="f-w-900" href="#">{{$subjects[$obj_mon_hoc->ma_mon]}}</a></p>
                                             </td>
                                             <td>
-                                                <select value="" class="form-control" style="display:block" name="day_hours" onchange="ajaxsavehour()">
-                                                    <option selected value="{{isset($buoi_hoc->hours)?$buoi_hoc->hours:0}}">{{isset($buoi_hoc->hours)?$buoi_hoc->hours:0}} Hours</option>
+                                                <select id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" class="roll_up form-control" style="display:block">
+                                                    <option selected value="{{isset($buoi_hoc->hours)?$buoi_hoc->hours:0}}">{{isset($buoi_hoc->hours)?$buoi_hoc->hours.' Hours':'Chưa điểm danh!'}} </option>
                                                     <option value="1">1 hours</option>
                                                     <option value="1.5">1.5 hours</option>
                                                     <option value="2">2 hours</option>
@@ -133,59 +346,84 @@
                                                     <option value="4">4 hours</option>
                                                     <option value="4.5">4.5 hours</option>
                                                 </select>
-                                                <div data-toggle="collapse" data-target="#panel-tinh-gio-rieng_{{$obj_mon_hoc->ma_giao_vien."_".$obj_mon_hoc->ma_mon}}" aria-expanded="false"  style="margin-top:5px" class="btn btn-outline-secondary">Tính giờ riêng</div>
-                                                <div style="width:100%" id="panel-tinh-gio-rieng_{{$obj_mon_hoc->ma_giao_vien."_".$obj_mon_hoc->ma_mon}}" class="tinh-rieng-gio collapse">
-                                                    <input class="form-control" type="text" value="" id="gio_giao_vien_" placeholder="Giờ giáo viên (VD: 1.5)">
-                                                    <input class="form-control" type="text" value="" id="gio_hoc_vien_" placeholder="Giờ học viên (VD: 2)">
-                                                    <button style="display:block" class="btn btn-success" onclick="luu_gio_rieng()">Lưu</button>
+                                                <div data-toggle="collapse" data-target="#panel-tinh-gio-rieng_{{$buoi_hoc->time}}" aria-expanded="false"  style="margin-top:5px" class="btn btn-outline-secondary">Tính giờ riêng</div>
+                                                <div style="width:100%" id="panel-tinh-gio-rieng_{{$buoi_hoc->time}}" class="tinh-rieng-gio collapse">
+                                                    <input class="form-control" type="text" value="" id="gio_giao_vien_{{$buoi_hoc->time}}" placeholder="Giờ giáo viên (VD: 1.5)">
+                                                    <input class="form-control" type="text" value="" id="gio_hoc_vien_{{$buoi_hoc->time}}" placeholder="Giờ học viên (VD: 2)">
+                                                    <button id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" style="display:block" class="tinh_gio_rieng btn btn-success" >Lưu</button>
                                                 </div>
                                             </td>
                                             <td>
                                                 {{-- {{isset($buoi_hoc->note)?$buoi_hoc->note:''}} --}}
-                                                <textarea class="width:800px" class="form-control" name="" id="" cols="10">@php echo isset($buoi_hoc->note)?$buoi_hoc->note:''@endphp
-                                            </textarea></td>
+                                                <textarea class="form-control" name="" id="note_{{$buoi_hoc->time}}" cols="10">@php echo isset($buoi_hoc->note)?$buoi_hoc->note:''@endphp</textarea>
+                                                <button id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" class="button__save-note btn btn-pill btn-primary">
+                                                Save</span>
+                                                </button>
+                                                <span class="f-w-600 txt-success" id="error_note_{{$buoi_hoc->time}}"></span>
+                                            </td>
                                             <td>
                                                 <p> Giờ giáo viên:
-                                                    <span class="text-primary f-w-900">
+                                                    <span id="hours_teacher_{{$buoi_hoc->time}}" class="text-primary f-w-900">
                                                     @php
-                                                        if($buoi_hoc->dd_prof==1){
                                                         if(isset($buoi_hoc->teacher_hours)){
                                                             echo $buoi_hoc->teacher_hours;
                                                         }elseif(isset($buoi_hoc->hours)){
                                                             echo $buoi_hoc->hours;
-                                                        }}else{ echo 0;}
+                                                        }else{ echo 0;}
                                                     @endphp Giờ </span>
                                                 </p>
-                                                <p> Giờ học sinh:<span class="text-success f-w-900">@php
-                                                    if($buoi_hoc->dd_student==1){
-                                                            echo $buoi_hoc->hours;
+                                                <p> Giờ học sinh:<span id="hours_student_{{$buoi_hoc->time}}" class="text-success f-w-900">@php
+                                                    if(isset($buoi_hoc->hours)){
+                                                        echo $buoi_hoc->hours;
                                                     }else{ echo 0;}
                                                 @endphp Giờ </span></p>
+                                                <p>Doanh thu: {{ isset($buoi_hoc->doanh_thu)?$buoi_hoc->doanh_thu:''}}</p>
                                             </td>
                                             <td>
-
-                                                <div id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$buoi_hoc->id_subject}}" id_teacher="{{$buoi_hoc->id_prof}}" class="button__delete btn btn-danger">Xóa </div>
+                                                <div id_nkgd="{{$teaching_recording->id}}" time="{{$buoi_hoc->time}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" class="button__delete-date btn btn-danger">Xóa </div>
                                             </td>
                                         </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    @endif
+                    @endforeach
+                @endif
+            </div>
+
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    Finished Subject
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                @if ($teaching_recording->teaching_history!=null)
+                    @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
+                        @if(isset($obj_mon_hoc->finish))
+                            <a id_nkgd="{{$teaching_recording->id}}" id_subject="{{$obj_mon_hoc->ma_mon}}" id_teacher="{{$obj_mon_hoc->ma_giao_vien}}" finish="false" class="dropdown-item button__finish-subject" href="#" type="button" class="">{{$teachers[$obj_mon_hoc->ma_giao_vien]}}-{{$subjects[$obj_mon_hoc->ma_mon]}}
+                            </a>
+                        @endif
                     @endforeach
                 @endif
             </div>
         </div>
-      </div>
+
    </div>
 </div>
 {{-- Nút NAV fixed  --}}
 @if($teaching_recording->teaching_history!=null)
-<div style="position:fixed; top:35px;left:50%;z-index:9999999;width:300px" class="dropdown">
+<div style="position:fixed; top:35px;left:40%;z-index:999;width:300px" class="dropdown">
     <button  class="btn btn-lg btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Môn & Giáo viên</button>
     <ul class="dropdown-menu">
         @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
-            @if(!isset($value->finish))
+            @if(!isset($obj_mon_hoc->finish))
+            @php
+            $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+            @endphp
             <li>
-                <a class="btn" href="#{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}" type="button" class="">{{$teachers[$obj_mon_hoc->ma_giao_vien]}}-{{$subjects[$obj_mon_hoc->ma_mon]}}
+                <a class="btn" href="#{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}" type="button" class="">{{$teacher_name}}-{{$subjects[$obj_mon_hoc->ma_mon]}}
                 </a>
             </li>
             @endif
@@ -210,17 +448,18 @@
                         <div id="chosse_teacher">
                             <div class="form-group">
                                 <label style="color:red;font-size:20px">Step 1: Choose Teacher</label>
-                                <select name="id_teacher" onchange="get_current_subject_teacher(this.value);" class="form-control">
+                                <select style="width:100%" id="pick_teacher" class="js-example-basic-single col-sm-12" name="id_teacher" onchange="get_current_subject_teacher(this.value);" class="form-control">
                                     <option selected="">Select Teacher</option>
                                     @foreach ($teachers as $id_teacher => $name)
                                     <option value="{{$id_teacher}}">{{$name}}</option>
                                     @endforeach
                                 </select>
+
                             </div>
                         </div>
                         <div id="choose_subject">
                             <label style="color:red;font-size:20px">Step 2: Choose Subject </label>
-                            <select name="id_subject" id="get_id_packet" class="form-control">
+                            <select style="width:100%" name="id_subject" id="get_id_packet" class="form-control">
                                 <option selected> Select Subject</option>
                             </select>
                         </div>
@@ -245,7 +484,7 @@
                     <input hidden type="text" id="renew_id" value='{{$teaching_recording->id}}' placeholder="">
                     <div class="form-group">
                         <label>Tên học sinh</label>
-                        <input class="form-control" type="text" id="renew_ten_hoc_sinh" value="" placeholder="">
+                        <input class="form-control" type="text" id="renew_ten_hoc_sinh" value="{{$students->full_name}}" placeholder="">
                     </div>
                     <div class="form-group">
                         <label>Số hóa đơn</label>
@@ -265,21 +504,15 @@
                     </div>
                     <div class="form-group">
                         <label>Số tiền</label>
-
                         <input class="form-control" pattern="\d+" type="number" id="renew_so_tien" value="" placeholder="">
                         <?php if($students->reserve>0){ ?>
-                        <div class="alert alert-warning mg-t-30">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <div class="alert alert-warning dark alert-dismissible fade show m-t-30">
                             <strong>Chú ý!</strong> Bé còn bảo lưu {{number_format($students->reserve)}} VNĐ, bạn có muốn cộng thêm số tiền đã bảo lưu vào gói giờ này?
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="reserve_plus" id="" value="1" >
-                                    Có
-                                </label>
-                                <label>
-                                    <input type="radio" name="reserve_plus" id="" value="0" checked="checked">
-                                    không
-                                </label>
+                            <div class="">
+                                <label>Có</label>
+                                <input required type="radio" name="reserve_plus" id="" value="1" >
+                                <label>Không</label>
+                                <input required type="radio" name="reserve_plus" id="" value="0" checked="checked">
                             </div>
                             <input type="hidden" name="reserve_value" value="{{$students->reserve}}">
                         </div>
@@ -287,7 +520,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="ajax_history_renew()" data-dismiss="modal" class="btn btn-info" >Renew</button>
+                    <button data-dismiss="modal" class="btn btn-info renew__add" >Renew</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
 
@@ -303,48 +536,52 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="{{route('add_day_teaching_history')}}" method="get" accept-charset="utf-8">
                     <div class="form-group-inner">
                         <label>Chọn môn:</label>
                         <div class="form-group" >
-                            <select onchange="chon_subject_them_mot_buoi()" id="select_packet_them_buoi" class="form-control">
-                                <option selected disabled="" >Pick one</option>}
-                                @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
-                                    <option value="{{$obj_mon_hoc->ma_giao_vien."_".$obj_mon_hoc->ma_mon}}">{{$teachers[$obj_mon_hoc->ma_giao_vien]}} - {{$subjects[$obj_mon_hoc->ma_mon]}}</option>
-                                @endforeach
+                            <select id="select_packet_them_buoi" class="form-control">
+                                <option selected >Pick one</option>
+                                @if(isset($teaching_recording->teaching_history))
+                                    @foreach (json_decode($teaching_recording->teaching_history) as $key_obj=>$obj_mon_hoc)
+                                        @if(!isset($obj_mon_hoc->finish)){
+                                        @php
+                                        $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                                            @endphp
+                                        <option value="{{$obj_mon_hoc->ma_giao_vien."_".$obj_mon_hoc->ma_mon}}">{{$teacher_name}} - {{$subjects[$obj_mon_hoc->ma_mon]}}</option>
+
+                                        @endif
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
-                        <input hidden type="text" placeholder="Mã giáo viên" id="idprof" name="idprof" value="" >
-                        <input hidden type="text" placeholder="Mã môn học" id="mamonhoc" name="mamonhoc" value="">
-                        <input type="text" placeholder="Mã học sinh" hidden name="idstudent" value='{{$teaching_recording->id_student}}' >
-                        <input type="text" hidden name="name" value="{{$teaching_recording->name}}" >
-                        <input type="text" hidden name="id" value="{{$teaching_recording->id}}" >
-                        <input type="text" hidden name="malop" value="{{$teaching_recording->ma_lop}}" >
+                        <input hidden type="text" placeholder="Mã giáo viên" id="idprof"  name="add_date_id_teacher" value="" >
+                        <input hidden type="text" placeholder="Mã môn học" id="mamonhoc"  name="add_date_id_subject" value="">
+                        <input type="text" placeholder="Mã học sinh" hidden name="add_date_id_student" value='{{$teaching_recording->id_student}}' >
+                        <input type="text" hidden name="add_date_id_nkgd" value="{{$teaching_recording->id}}">
                         <div class="form-group">
                             <label>New Date</label>
                             <div class="input-group date">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                <input name="newdate" type="date" class="form-control">
+                                <input name="add_date_newdate" type="date" class="form-control">
                             </div>
                         </div>
                         <div style="margin-top:10px" class="form-group">
                             <label>Start At:</label>
-                            <input name="starttime" type="time" name="start" value="">
+                            <input name="add_date_starttime" type="time" name="start" value="">
                         </div>
                         <div style="margin-top:10px" class="form-group">
                             <label>End at:</label>
-                            <input name="endtime" type="time" name="end" value="">
+                            <input name="add_date_endtime" type="time" name="end" value="">
                         </div>
                         <div style="width:100%" style="margin-top:10px" class="form-group">
                             <label>Note</label>
-                            <textarea style="height:200px" name="notedoilich" class="form-control" name="note"></textarea>
+                            <textarea style="height:200px" name="add_date_note" class="form-control" name="note"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input class="btn btn-success" type="submit" name="" value="Submit">
+                        <input class="btn btn-success button__add-date" type="submit" name="" value="Submit">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
-                </form>
             </div>
         </div>
     </div>
@@ -370,13 +607,18 @@
                             <div class="form-group">
                                 <select id="selectpacket" name="select_packet" class="form-control">
                                     <option selected="">Pick one</option>
-                                    @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
-                                        @if(!isset($value->finish))
-                                        <option value="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}">
-                                            Giáo viên: {{$teachers[$obj_mon_hoc->ma_giao_vien]}} - Môn: {{$subjects[$obj_mon_hoc->ma_mon]}}
-                                        </option>
-                                        @endif
-                                    @endforeach
+                                    @if(isset($teaching_recording->teaching_history))
+                                        @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
+                                            @if(!isset($obj_mon_hoc->finish))
+                                            @php
+                                            $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                                             @endphp
+                                            <option value="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}">
+                                                Giáo viên: {{$teacher_name}} - Môn: {{$subjects[$obj_mon_hoc->ma_mon]}}
+                                            </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <label class="f-w-600" style="margin-top:20px;color:red;font-size:20px"> Step 2: Pick Start &amp; End date</label>
@@ -439,6 +681,12 @@
                                         <label>End at <input id="echunhat" type="time"></label>
                                     </div>
                                 </div>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                  <strong>Các buổi trùng (trùng ngày, trùng thời gian bắt đầu) sẽ tự động được bỏ qua</strong>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -450,6 +698,7 @@
         </div>
     </div>
 </div>
+
 @if ($errors->any())
 <script>
 @foreach ($errors->all() as $error)
@@ -462,19 +711,9 @@ alert('{{ $error }}')
 
 @section('script')
 <script>
-    // bắt sự kiện click nút delete và gửi ajax
-    document.querySelectorAll('.button__delete').forEach(e=>{
-        e.addEventListener('click',function(){
-                object_param={
-                    id_nkgd:e.getAttribute("id_nkgd"),
-                    time: e.getAttribute("time"),
-                    id_subject:e.getAttribute("id_subject"),
-                    id_teacher:e.getAttribute("id_teacher")
-                }
-                let url = '{{route('delete_day')}}';
-                    ajax_get_custom(object_param,url,e.getAttribute("time"));
-            })
-    })
+    // Định nghĩa route gốc thành biến toàn cục (dành cho js và jquery xài ajax)
+	var rootUrl = "{{ route('teaching_recordings')}}";
+     var token = '{{ csrf_token() }}';
     //Bắt sự kiện click vào submit để điền json lịch học vô input json_lich_hoc
     document.querySelector('#them_nhieu_buoi [type=submit]').addEventListener("click",tao_json_lich_hoc)
     function tao_json_lich_hoc(){
@@ -516,6 +755,29 @@ alert('{{ $error }}')
         xhttp.open("GET",'{{route('teachers')}}/json_get_currect_subject_teacher/'+id_teacher, true);
         xhttp.send();
     }
+</script>
+<script>
+    $("#select_packet_them_buoi").change(function (e) {
+        let value = $(this).val();
+        var vitridaugach = value.search('_');
+        var id_teacher = value.substring(0,vitridaugach);
+        var id_subject = value.substr(vitridaugach+1);
+        $("input[name=idprof]").val(id_teacher);
+        $("input[name=mamonhoc]").val(id_subject);
+    });
+    $('.money_to_hours').keyup(function () {
+        let total_money = $('#so_tien_can_chuyen').val();
+        let amountPerHour = $('#so_tien_tren_gio').val();
+        let hours = total_money/amountPerHour;
+        $('#so_gio').val(hours.toFixed(1));
+    });
+
+    $('.reserve__select').keyup(function(){
+        let tienTrenGio = $('[name="reserve_amountPerHour"]').val();
+        let time_left = $('[name="reserve_timeLeft"]').val();
+        let tienBaoLuu =tienTrenGio*time_left;
+        $('[name="reserve_amountOfMonney"]').val(tienBaoLuu);
+    })
 </script>
 <script src="{{ asset('assets/js/custom/function.js')}}"></script>
 <script src="{{ asset('assets/js/select2/select2.full.min.js') }}" ></script>

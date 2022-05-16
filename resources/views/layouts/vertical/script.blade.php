@@ -19,7 +19,7 @@
 <!-- Plugins JS Ends-->
 <!-- Theme js-->
 <script src="{{asset('assets/js/script.js')}}"></script>
-<script src="{{asset('assets/js/theme-customizer/customizer.js')}}"></script>
+{{-- <script src="{{asset('assets/js/theme-customizer/customizer.js')}}"></script> --}}
 <script src="{{asset('assets/js/jquery.drilldown.js')}}"></script>
 <script src="{{asset('assets/js/vertical-menu.js')}}"></script>
 <script src="{{asset('assets/js/megamenu.js')}}"></script>

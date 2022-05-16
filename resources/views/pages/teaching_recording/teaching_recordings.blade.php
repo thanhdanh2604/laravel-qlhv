@@ -103,7 +103,7 @@
                         </div>
                       </div>
                     <!-- End add new teacher -->
-                    <table id="basic-2" class="table">
+                    <table id="basic-2" class="table keytable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -128,6 +128,9 @@
                                 <td class="font-primary f-w-700">{{$teaching_recording->name}}</td>
                                 <td>
                                     @switch($teaching_recording->type)
+                                        @case(0)
+                                        <span class="badge badge-success">TRAIL</span>
+                                       @break
                                         @case(1)
                                             <span class="badge badge-info">P-P</span>
                                             @break
@@ -152,19 +155,31 @@
                                 <td>
 
                                     @switch($teaching_recording->type)
+                                        @case(0)
+                                            @php
+                                             if(isset($students[$teaching_recording->id_student])){
+                                                echo "<a target=\"__blank\" href=\"students/detail/".$teaching_recording->id_student."\"><span class=\"badge badge-dark\">".$students[$teaching_recording->id_student]."</span></br></a>";
+                                                break;
+                                             }
+                                            @endphp
+                                        @break
                                         @case(1)
                                             @php
-                                                echo "<a target=\"__blank\" href=\"students/detail/".$teaching_recording->id_student."\"><span class=\"badge badge-dark\">".$students[$teaching_recording->id_student]."</span></br></a>";
+                                                if(isset($students[$teaching_recording->id_student])){
+                                                    echo "<a target=\"__blank\" href=\"students/detail/".$teaching_recording->id_student."\"><span class=\"badge badge-dark\">".$students[$teaching_recording->id_student]."</span></br></a>";
+                                                }
                                                 break;
                                             @endphp
                                             @break
                                         @case(2)
                                             @php
-                                            $array_student = json_decode($teaching_recording->id_student);
-                                            //var_dump($teachers[1]);
-                                            foreach ($array_student as $teaching_id_student) {
-                                                echo "<a href=\"students/detail/".$teaching_id_student."\"><span class=\"badge badge-secondary\">".$students[$teaching_id_student]."</span></br></a>";
-                                            }
+
+                                                $array_student = json_decode($teaching_recording->id_student);
+                                                //var_dump($teachers[1]);
+                                                foreach ($array_student as $teaching_id_student) {
+                                                    echo "<a href=\"students/detail/".$teaching_id_student."\"><span class=\"badge badge-secondary\">".$students[$teaching_id_student]."</span></br></a>";
+                                                }
+
                                             @endphp
                                             @break
                                         @default
@@ -177,15 +192,11 @@
                                             echo "Chưa tạo lịch học!";
                                         }else{
                                             foreach (json_decode($teaching_recording->teaching_history) as $value){
-                                            if(!isset($value->finish)){
-                                                foreach ($teachers as $name => $id_teacher) {
-                                                    if($value->ma_giao_vien == $id_teacher){
-                                                        echo "<a target=\"__blank\" href=\"teachers/detail/".$id_teacher."\"><span class=\"badge badge-warning\">".$name."</span></a></br>";
-                                                        break;
-                                                    }
+                                                if(isset($teachers[$value->ma_giao_vien])){
+                                                    echo "<a target=\"__blank\" href=\"teachers/detail/".$value->ma_giao_vien."\"><span class=\"badge badge-warning\">".$teachers[$value->ma_giao_vien]."</span></a></br>";
                                                 }
                                             }
-                                            }
+
                                         }
                                     @endphp
                                 </td>
@@ -245,26 +256,25 @@
     node_name_radio_type.forEach(element =>{
         element.addEventListener("change",function(){
             if(this.checked){
-                if(this.value==1){
-                    document.getElementById("block_select_pp").style.display="block"
-                    document.getElementById("block_select_group").style.display="none"
-                    document.getElementById("block_ma_lop").hidden = false
-                }
-                if(this.value==0){
-                    document.getElementById("block_select_pp").style.display="block"
-                    document.getElementById("block_select_group").style.display="none"
-                    document.getElementById("block_ma_lop").value = "TRAIL"
-                    document.getElementById("block_ma_lop").hidden = true
-                }
-                if(this.value==2){
-                    document.getElementById("block_select_group").style.display="block"
-                    document.getElementById("block_select_pp").style.display="none"
-                    document.getElementById("block_ma_lop").value = "GROUP"
-                    document.getElementById("block_ma_lop").hidden = true
-
-                }
                 // Lấy Tự động chọn mã lớp
-
+                switch (this.value) {
+                    case 1:
+                        document.getElementById("block_select_pp").style.display="block"
+                        document.getElementById("ma_lop").value = ""
+                        document.getElementById("block_select_group").style.display="none"
+                        break;
+                    case 0:
+                        document.getElementById("block_select_pp").style.display="block"
+                        document.getElementById("block_select_group").style.display="none"
+                        document.getElementById("ma_lop").value = "TRAIL"
+                        break;
+                    case 2:
+                        document.getElementById("block_select_group").style.display="block"
+                        document.getElementById("block_select_pp").style.display="none"
+                        document.getElementById("ma_lop").value = "GROUP"
+                    default:
+                        break;
+                }
             }
         })
     })
@@ -285,7 +295,7 @@
         xhttp.onload = function() {
            console.log(this.responseText)
         }
-        xhttp.open("GET", "./teaching_recordings/edit/finish/"+id+"?finish="+value, true);
+        xhttp.open("POST", "./teaching_recordings/edit/finish/"+id+"?finish="+value, true);
         xhttp.send();
     }
 
