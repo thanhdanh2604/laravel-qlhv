@@ -384,93 +384,93 @@ $(document).ready(function(){
      * Phần xử lý renew history
      */
     // Nút lưu renew history
-        $('.renew__add').click(function (e) {
-            let check_bao_luu= $('[name="reserve_plus"]').val();
-            var object_param={
-                id_nkgd:$('#renew_id').val(),
-                id_student:$('#renew_id_student').val(),
-                ten_hoc_sinh:$('#renew_ten_hoc_sinh').val(),
-                so_hoa_don:$('#renew_so_hoa_don').val(),
-                so_gio:$('#renew_so_gio').val(),
-                ngay_bat_dau:$('#renew_ngay_bat_dau').val(),
-                ngay_nhan:$('#renew_ngay_nhan').val(),
-                so_tien:$('#renew_so_tien').val()
-            }
-            if(check_bao_luu==1){
-                object_param["bao_luu"] = $('[name="reserve_value"]').val();
-            }
-            // tạo json lịch sử
-            if(object_param.id_nkgd==""||object_param.id_student==""||object_param.ten_hoc_sinh==""||object_param.so_hoa_don==""||object_param.so_gio==""||object_param.ngay_bat_dau==""||object_param.ngay_nhan==""||object_param.so_tien==""){
-                alert("Bạn vui lòng nhập đầy đủ TẤT CẢ các trường, vui lòng nhập lại!");
-            }
-            else{
-                $.ajax({
-                    type: "POST",
-                    url: rootUrl+'/detail/renew_history/add',
-                    data: object_param,
-                    success: function (response) {
-                       if(response.status=='success'){
-                            // let current_hours = $('#time_left').text();
-                            // $('#time_left').text(current_hours+response.hours);
-                            location.reload();
-                       }else{
-                           console.log(response);
-                           alert('Lỗi, vui lòng liên hệ web-admin');
-                       }
-
-                    }
-                });
-            }
-        });
-        $('.renew__edit').keypress(function (e) {
-            if(e.which==13){
-                var object_param={
-                    id_nkgd:$(this).attr("id_nkgd"),
-                    key:$(this).attr("key"),
-                    key_name:$(this).attr("key_name"),
-                    value:$(this).val()
-                }
-                $.ajax({
-                    type: "GET",
-                    url: rootUrl+'/detail/renew_history/edit',
-                    data: object_param,
-                    success: function (response) {
-                        if(response.status=='success'){
-                            //   $('#0_sotientrengio').append('<i class=\"fas fa-check text-success\"></i>');
-                            alert("Done!");
-                        }else{
-
-                            alert("Lỗi, liên hệ web admin!")
-                        }
-                    }
-                });
-            }
-        });
-        $('.renew__edit').tooltip({
-            placement: "top",
-            trigger: "focus"
-        });
-        // Nút xóa renew
-        $('.renew__delete').click(function (e) {
-                var object_param={
-                    id_nkgd:$(this).attr("id_nkgd"),
-                    key:$(this).attr("key")
-                }
-                $.ajax({
-                    type: "GET",
-                    url: rootUrl+'/detail/renew_history/delete',
-                    data: object_param,
-                    success: function (response) {
+    $('.renew__add').click(function (e) {
+        let check_bao_luu= $('[name="reserve_plus"]').val();
+        var object_param={
+            id_nkgd:$('#renew_id').val(),
+            id_student:$('#renew_id_student').val(),
+            ten_hoc_sinh:$('#renew_ten_hoc_sinh').val(),
+            so_hoa_don:$('#renew_so_hoa_don').val(),
+            so_gio:$('#renew_so_gio').val(),
+            ngay_bat_dau:$('#renew_ngay_bat_dau').val(),
+            ngay_nhan:$('#renew_ngay_nhan').val(),
+            so_tien:$('#renew_so_tien').val()
+        }
+        if(check_bao_luu==1){
+            object_param["bao_luu"] = $('[name="reserve_value"]').val();
+        }
+        // tạo json lịch sử
+        if(object_param.id_nkgd==""||object_param.id_student==""||object_param.ten_hoc_sinh==""||object_param.so_hoa_don==""||object_param.so_gio==""||object_param.ngay_bat_dau==""||object_param.ngay_nhan==""||object_param.so_tien==""){
+            alert("Bạn vui lòng nhập đầy đủ TẤT CẢ các trường, vui lòng nhập lại!");
+        }
+        else{
+            $.ajax({
+                type: "POST",
+                url: rootUrl+'/detail/renew_history/add',
+                data: object_param,
+                success: function (response) {
+                    if(response.status=='success'){
+                        // let current_hours = $('#time_left').text();
+                        // $('#time_left').text(current_hours+response.hours);
+                        location.reload();
+                    }else{
                         console.log(response);
-                        if(response.status=='success'){
-                            $('#renew_'+object_param.key).fadeOut();
-                        }else{
-                            console.log(response);
-                            alert(response.error_messenger)
-                        }
+                        alert('Lỗi, vui lòng liên hệ web-admin');
                     }
-                });
-        });
+
+                }
+            });
+        }
+    });
+    $('.renew__edit').keypress(function (e) {
+        if(e.which==13){
+            var object_param={
+                id_nkgd:$(this).attr("id_nkgd"),
+                key:$(this).attr("key"),
+                key_name:$(this).attr("key_name"),
+                value:$(this).val()
+            }
+            $.ajax({
+                type: "GET",
+                url: rootUrl+'/detail/renew_history/edit',
+                data: object_param,
+                success: function (response) {
+                    if(response.status=='success'){
+                        //   $('#0_sotientrengio').append('<i class=\"fas fa-check text-success\"></i>');
+                        alert("Done!");
+                    }else{
+
+                        alert("Lỗi, liên hệ web admin!")
+                    }
+                }
+            });
+        }
+    });
+    $('.renew__edit').tooltip({
+        placement: "top",
+        trigger: "focus"
+    });
+    // Nút xóa renew
+    $('.renew__delete').click(function (e) {
+            var object_param={
+                id_nkgd:$(this).attr("id_nkgd"),
+                key:$(this).attr("key")
+            }
+            $.ajax({
+                type: "GET",
+                url: rootUrl+'/detail/renew_history/delete',
+                data: object_param,
+                success: function (response) {
+                    console.log(response);
+                    if(response.status=='success'){
+                        $('#renew_'+object_param.key).fadeOut();
+                    }else{
+                        console.log(response);
+                        alert(response.error_messenger)
+                    }
+                }
+            });
+    });
    // Nút đồng bộ lại doanh thu
    $('#syns_revenue').click(function(e){
     var object_param={

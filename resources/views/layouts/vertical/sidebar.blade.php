@@ -8,9 +8,9 @@
 
          <li>
              <a href="{{route('/')}}"> Dashboard</a></li>
-         <li>
-            <a href="#"> Calendar</a>
-         </li>
+         {{-- <li>
+            <a href="{{route('calendar')}}"> Calendar</a>
+         </li> --}}
          <li>
             <a href="{{route('teachers')}}">Teachers</a>
          </li>

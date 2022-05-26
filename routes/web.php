@@ -10,6 +10,8 @@ use App\Http\Controllers\calendar;
 use App\Http\Controllers\teaching_recording\teaching_recordings;
 use App\Http\Controllers\teaching_recording\details_teaching_recording;
 
+use App\Http\Controllers\payment\payments;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +91,9 @@ Route::group(['middleware' => 'auth'], function(){
             });
         });
     });
+    // Route::prefix('payment')->group(function () {
+    //     Route::get('/',[payment::class,'index']);
+    // });
 });
 
 // Route::get('/test',function(){
@@ -98,5 +103,8 @@ Route::group(['middleware' => 'auth'], function(){
 //     echo date('d-M-Y',$time);
 // });
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
+
+Route::get('/payment',[payments::class,'index']);
+
 
 require __DIR__.'/auth.php';
