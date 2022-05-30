@@ -30,9 +30,8 @@
             <a href="#"> Admin & Payment</a>
 
             <ul>
-                <li><a href="#">Payment</a></li>
-                <li><a href="#">Tuition fee</a></li>
-                <li><a href="#">Teaching Statistics</a></li>
+                <li><a href="{{route('payment')}}">Payment</a></li>
+                <li><a href="{{route('teaching_statistics')}}">Teaching Statistics</a></li>
                 <li><a href="#">Management Member</a></li>
             </ul>
          </li>

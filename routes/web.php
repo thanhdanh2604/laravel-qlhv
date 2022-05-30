@@ -11,6 +11,8 @@ use App\Http\Controllers\teaching_recording\teaching_recordings;
 use App\Http\Controllers\teaching_recording\details_teaching_recording;
 
 use App\Http\Controllers\payment\payments;
+use App\Http\Controllers\payment\teaching_statistics;
+
 
 
 /*
@@ -25,7 +27,7 @@ use App\Http\Controllers\payment\payments;
 */
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('/', [ban_tin::class, 'index'])->name('/');
-    route::get('/calendar',[calendar::class,'index'])->name('calendar');
+    route::get('/calendar',[calendar::class,'index'])->name('calendar');// incomplete
     Route::prefix('teachers')->group(function () {
         Route::get('/', [teacher::class, 'index'])->name('teachers');
         Route::get('/detail/{id}', [teacher::class, 'show'])->name('teacher_detail');
@@ -91,9 +93,14 @@ Route::group(['middleware' => 'auth'], function(){
             });
         });
     });
-    // Route::prefix('payment')->group(function () {
+    Route::prefix('payment')->group(function () {
     //     Route::get('/',[payment::class,'index']);
-    // });
+        Route::get('/',[payments::class,'index'])->name('payment');
+        Route::get('/update',[payments::class,'update_once'])->name('payment_update');
+        Route::get('/teaching_statistics',[teaching_statistics::class,'index'])->name('teaching_statistics');
+        Route::get('/get_all_teaching_hours',[teaching_statistics::class,'get_all_teaching_hours'])->name('get_all_teaching_hours');
+        Route::get('/teaching_details/{id_teacher}',[teaching_statistics::class,'teaching_detail'])->name('teaching_details');
+    });
 });
 
 // Route::get('/test',function(){
@@ -104,7 +111,7 @@ Route::group(['middleware' => 'auth'], function(){
 // });
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
 
-Route::get('/payment',[payments::class,'index']);
+
 
 
 require __DIR__.'/auth.php';

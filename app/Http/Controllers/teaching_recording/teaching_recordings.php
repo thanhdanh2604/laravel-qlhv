@@ -161,8 +161,6 @@ class teaching_recordings extends Controller
         $id_nkgd = $request->input('id_nkgd');
         $key = $request->input('key');
         $key_value = $request->input('key_value');
-
-
         DB::table('teaching_recording')->where('id', $id_nkgd)
                     ->update([$key=>$key_value]);
 

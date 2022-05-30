@@ -101,7 +101,7 @@
                                 <th scope="col">Phone</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Hệ số lương</th>
-                                <th scope="col">Teaching Subject</th>
+
                                 <th scope="col">Note</th>
                                 <th>Tool</th>
                             </tr>
@@ -125,8 +125,8 @@
                                     echo number_format($teacher->hesoluong);
                                     @endphp
                                 </td>
-                                <td>
-                                    {{-- <span >
+                                {{-- <td> Đoạn này do số môn học giáo viên dạy nhiều quá hiển thị không đủ phải comment lại
+                                    <span >
                                         @if(isset($teacher->teaching_subject)&&$teacher->teaching_subject!='null')
                                             @foreach (json_decode($teacher->teaching_subject) as $id_subject)
                                                 @foreach ($subjects as $subject)
@@ -136,8 +136,8 @@
                                                 @endforeach
                                             @endforeach
                                         @endif
-                                    </span> --}}
-                               </td>
+                                    </span>
+                               </td> --}}
                                 <td>{{$teacher->note}}</td>
                                 <td>
                                     <div class="btn-group btn-sm">
