@@ -23,8 +23,7 @@
 <div class="container-fluid">
    <div class="row starter-main">
       <div class="col-sm-12">
-         <div class="card">
-
+         <div>
             <div class="card-body">
                 <div class="table-responsive">
                     <h1>Teaching Recording List</h1>

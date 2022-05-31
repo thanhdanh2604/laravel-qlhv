@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth'], function(){
 //     $time = strtotime($date." ".$starttime);
 //     echo date('d-M-Y',$time);
 // });
+
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
 
 

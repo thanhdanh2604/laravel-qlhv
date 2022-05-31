@@ -10,8 +10,7 @@ use App\Models\teacher;
 use App\Models\M_teaching_recording;
 use App\Models\subject;
 use App\Models\student;
-
-
+use App\Models\teacher_payment;
 
 class teaching_statistics extends Controller
 {
@@ -35,10 +34,11 @@ class teaching_statistics extends Controller
         $month = isset($_GET['month'])?$_GET['month']:null;
         $start_date = isset($_GET['start_date'])?$_GET['start_date']:null;
         $end_date = isset($_GET['end_date'])?$_GET['end_date']:null;
-
+        $next_month=null;
+        $pre_month=null;
         if($month!=null){
-            $start_date = date('Y-m-01',strtotime($month));
-            $end_date = date('Y-m-t',strtotime($month));
+            $start_date = date('Y-m-01',$month);
+            $end_date = date('Y-m-t',$month);
             $next_month = mktime(0,0,0,date("m",$month)+1,1,date("Y",$month));
             $pre_month = mktime(0,0,0,date("m",$month)-1,1,date("Y",$month));
         }elseif(($start_date==null)||$end_date==null){
@@ -50,27 +50,41 @@ class teaching_statistics extends Controller
         }
 
         $details = array();
-		foreach ($data_teaching_recording as $value ) {
-            $check_have_class_in_month=false;
+		  foreach ($data_teaching_recording as $value ) {
+           
             $teaching_history_data = json_decode($value);
             if($teaching_history_data ===null){
                 continue;
             }else{
                 foreach ($teaching_history_data as $each_NKGD) {
-                    if ($each_NKGD->ma_giao_vien==$id_teacher) {
-                        foreach ($each_NKGD->lich_hoc_du_kien as $chi_tiet_buoi) {
-                            if (($chi_tiet_buoi->time>=strtotime($start_date))&&($chi_tiet_buoi->time<=strtotime($end_date)) ) {
-
-                                $check_have_class_in_month == true;
-                                break;
-                            }
-                        }
-                    }
-                    if ($check_have_class_in_month == true) {
+                  $check_have_class_in_month=false;
+                  if ($each_NKGD->ma_giao_vien==$id_teacher) {
+                      foreach ($each_NKGD->lich_hoc_du_kien as $chi_tiet_buoi) {
+                          if (($chi_tiet_buoi->time>=strtotime($start_date))&&($chi_tiet_buoi->time<=strtotime($end_date)) ) {
+                              $check_have_class_in_month = true;
+                              break;
+                          }
+                      }
+                      if ($check_have_class_in_month == true) {
                         $details[]=$each_NKGD;
-                    }
+                      }
+                  }
                 }
+                
             }
+        }
+        // sắp xếp lại mảng danh sách buổi học
+        // usort($details,function($date1,$date2){
+
+        // })
+        // Check salary confirm
+        $data_teacher_payment = teacher_payment::where('id_teacher',$id_teacher)->get();
+        $status_salary = false;
+        foreach ($data_teacher_payment as $value) {
+          if (date('m',$value->luong_cua_thang)==date('m',$month)) {
+            $status_salary = true;
+            break;
+          }
         }
         return view('pages.payment.teacher_payment.teaching_detail',[
             'teaching_details'=>$details,
@@ -82,7 +96,8 @@ class teaching_statistics extends Controller
             'end_date'=>$end_date,
             'month'=>$month,
             'next_month'=>$next_month,
-            'pre_month'=>$pre_month
+            'pre_month'=>$pre_month,
+            'status_salary'=>$status_salary
         ]);
     }
     function get_all_teaching_hours($start_date=null,$end_date=null){
@@ -97,7 +112,7 @@ class teaching_statistics extends Controller
             $end_date = date('Y-m-t',strtotime('last month'));
         }
         $array_temp = array();
-		foreach ($data_teaching_recording as $value ) {
+		  foreach ($data_teaching_recording as $value ) {
             $data1 = json_decode($value);
             if($data1 ===null){
                 continue;
@@ -122,8 +137,19 @@ class teaching_statistics extends Controller
                     }
                 }
             }
-		}
-		return $array_temp;
+        }
+        return $array_temp;
 
     }
-}
+    function salary_check( Request $request){
+      //insert salary check log
+      $teacher_payment = new teacher_payment;
+      $teacher_payment->id_teacher = $request->input('id_teacher');
+      $teacher_payment->luong_cua_thang = $request->input('luong_cua_thang');
+      $teacher_payment->so_tien = $request->input('tien_luong');
+      $teacher_payment->he_so_luong = $request->input('he_so_luong');
+      $teacher_payment->so_gio = $request->input('so_gio');
+      $teacher_payment->date_checked = strtotime('now');
+      $teacher_payment->save(); 
+    }
+} 

@@ -166,7 +166,7 @@
                                         <div class="form-group">
                                             <label for="">Số giờ</label>
                                             <input type="text"
-                                              class="form-control" name="" id="covert_so_gio" aria-describedby="helpId" placeholder="" value="@if(isset($amountOfmonneyPerHour)){{$students->reserve/$amountOfmonneyPerHour}}@endif">
+                                              class="form-control" name="" id="covert_so_gio" aria-describedby="helpId" placeholder="" value="@if(isset($amountOfmonneyPerHour)&&$students->reserve!=0){{$students->reserve/$amountOfmonneyPerHour}}@endif">
                                             <small id="helpId" class="form-text text-muted">Số giờ sau khi tính</small>
                                           </div>
 

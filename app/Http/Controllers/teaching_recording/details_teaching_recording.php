@@ -805,9 +805,9 @@ class details_teaching_recording extends Controller
                         foreach ($classes as $time => $detail_class) {
                             $detail_class->date = date('d-M-Y',$time);
                             if(!empty($detail_class->starttime)){
-                                $detail_class->time = strtotime($detail_class->date." ".$detail_class->starttime);
+                                $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
                             }else{
-                               $detail_class->time = strtotime($detail_class->date." 12:00AM");
+                               $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
                             }
                             $array_temp[]=$detail_class;
                         }
