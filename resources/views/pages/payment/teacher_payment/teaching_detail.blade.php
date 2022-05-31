@@ -26,7 +26,6 @@
 </style>
 @endsection
 @section('content')
-<?php $ktrachotluong=1 ?>
 <div class="container-fluid">
   <div class="row starter-main">
     <div class="col-sm-12">
@@ -56,17 +55,18 @@
                     </h4>
                     <?php } ?>
                   </div>
+                  @php $i=0;@endphp
                   @foreach ($teaching_details as $item)
                   @php $total_hours_student=0;
                   $total_hours_teacher=0;@endphp
                   <p>
                     <button style="width:100%" class="btn btn-pill btn-primary btn-air-primary" type="button" title=""
-                      data-toggle="collapse" data-target="#{{$item->ma_hoc_sinh}}_{{$item->ma_mon}}"
+                      data-toggle="collapse" data-target="#collapse{{$i}}"
                       aria-expanded="false"
-                      aria-controls="{{$item->ma_hoc_sinh}}_{{$item->ma_mon}}">{{$students[$item->ma_hoc_sinh]}} --
+                      aria-controls="collapse{{$i}}">{{isset($students[$item->ma_hoc_sinh])?$students[$item->ma_hoc_sinh]:'Group class'}} --
                       {{$subjects[$item->ma_mon]}} </button>
                   </p>
-                  <div class="collapse" id="{{$item->ma_hoc_sinh}}_{{$item->ma_mon}}">
+                  <div class="collapse" id="collapse{{$i}}">
                     <table class="table">
                       <thead>
                         <tr>
@@ -85,9 +85,9 @@
                         })
                         @endphp
                         @foreach($item->lich_hoc_du_kien as $chi_tiet_buoi)
-                        
+
                         @if(strtotime($start_date)<=$chi_tiet_buoi->time && strtotime($end_date)>=$chi_tiet_buoi->time)
-                          @if(isset($chi_tiet_buoi->hours)||isset($chi_tiet_buoi->teacher_hours))
+
                           <tr>
                             <td> @php echo $stt; $stt++; @endphp</td>
                             <td>{{date('d-m-Y',$chi_tiet_buoi->time)}}</td>
@@ -102,11 +102,11 @@
                               <span class="txt-primary f-w-900">
                                 @php
                                 if(isset($chi_tiet_buoi->teacher_hours)){
-                                echo $chi_tiet_buoi->teacher_hours;
-                                $total_hours_teacher+=$chi_tiet_buoi->teacher_hours;
+                                    echo $chi_tiet_buoi->teacher_hours;
+                                    $total_hours_teacher+=$chi_tiet_buoi->teacher_hours;
                                 }elseif(isset($chi_tiet_buoi->hours)){
-                                echo $chi_tiet_buoi->hours;
-                                $total_hours_teacher+=$chi_tiet_buoi->hours;
+                                    echo $chi_tiet_buoi->hours;
+                                    $total_hours_teacher+=$chi_tiet_buoi->hours;
                                 }else{
                                 echo 0;
                                 }
@@ -118,18 +118,18 @@
                                   }}</td>
                           </tr>
                           @endif
-                          @endif
+                          @php $i++;@endphp
                           @endforeach
                       </tbody>
                       <tfoot>
                         <tr>
-                          <th colspan=""></th>
-                          <th></th>
+                          <th colspan="2"></th>
+
                           <th colspan="2">
                             Teaching time: <span id="teaching-time" name="teaching-time"
                               style="color:red">{{$total_hours_teacher}} </span>hours
                           </th>
-
+                          <th></th>
                         </tr>
                       </tfoot>
                     </table>
@@ -138,27 +138,30 @@
             </div>
           </div>
         </div>
-        
+
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 right-side">
           <div>
             <div class="card-body">
               <div style="" class="hpanel shadow-inner responsive-mg-b-30">
                 <div class="panel-body">
-                    <!-- <div style="" class="dropdown">
-                      <button id="mySelect2" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Teacher
-                      <span class="caret"></span></button>
-                      <ul style="height:600px;overflow:scroll" class="dropdown-menu">
-                        <?php foreach ($teachers as $teacher) {
-                          echo "<li><a href=\"".$teacher->id_teacher."\">".$teacher->fullname."</a></li>";
-                        } ?>
-                      </ul>
-                    </div> -->
+                    {{-- <label for="">Select teacher:</label>
                     <select class="form-control" name="" id="select_teacher">
                     <?php foreach ($teachers as $teacher) {
                      echo "<option value=\"".$teacher->id_teacher."\">".$teacher->fullname."</option>";
                     }
                       ?>
-                    </select>
+                    </select> --}}
+                    <div class="btn-group">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Select teacher another teacher
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                            <?php foreach ($teachers as $teacher) { ?>
+                            <a class="dropdown-item" href="{{route('teaching_details',['id_teacher'=>$teacher->id_teacher])}}">{{$teacher->fullname}}</a>
+                            <?php } ?>
+                        </div>
+                    </div>
                   <table class="table table-striped">
                     <caption>Total:</caption>
                     <thead>
@@ -186,7 +189,7 @@
                             <input hidden type="text" name="he_so_luong"
                               value="<?php echo $detail_teacher->hesoluong;?>">
                             <input hidden type="text" name="so_gio" id="chot_gio" value="">
-                            <?php if ($status_salary==true) { ?>
+                            <?php if ($status_salary===true) { ?>
                             <button disabled class="btn btn-success btn-lg">Đã chốt</button>
                             <?php }else{ ?>
                             <button type="submit" name="submit_chot_luong" class="btn btn-success btn-lg">Chốt
@@ -238,11 +241,13 @@
 
 <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
 <script>
-  $('#select_teacher').select2({
-});
-$('#select_teacher').on('change', function() {
-  window.open('?start_date='+start+'&end_date='+end)
-});
+
+$('#select_teacher').select2();
+
+$( "#select_teacher" ).change(function () {
+    console.log($(this).value)
+  })
+
 </script>
 
 @endsection
