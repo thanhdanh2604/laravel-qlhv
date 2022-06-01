@@ -64,7 +64,7 @@
                       data-toggle="collapse" data-target="#collapse{{$i}}"
                       aria-expanded="false"
                       aria-controls="collapse{{$i}}">{{isset($students[$item->ma_hoc_sinh])?$students[$item->ma_hoc_sinh]:'Group class'}} --
-                      {{$subjects[$item->ma_mon]}} </button>
+                      {{isset($subjects[$item->ma_mon])?$subjects[$item->ma_mon]:''}} </button>
                   </p>
                   <div class="collapse" id="collapse{{$i}}">
                     <table class="table">
@@ -154,7 +154,7 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
-                                Select teacher another teacher
+                                Select teacher
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
                             <?php foreach ($teachers as $teacher) { ?>
@@ -177,11 +177,11 @@
                         <td><span id="hours-teaching"> </span> Hour</td>
                         <td><span id="total-money"> </span> VNĐ</td>
                       </tr>
-                      <?php
-                        if (!(isset($_GET['start_date'])&& isset($_GET['end_date'] ))) { ?>
+                     
+                       
                       <tr>
                         <td style="text-align:center" colspan="3">
-                          <form action="teaching-details.php" method="get">
+                          
                             <input hidden type="text" name="id_teacher"
                               value="<?php echo $detail_teacher->id_teacher ?>">
                             <input hidden type="text" name="luong_cua_thang" value="<?php echo $month ?>">
@@ -190,15 +190,14 @@
                               value="<?php echo $detail_teacher->hesoluong;?>">
                             <input hidden type="text" name="so_gio" id="chot_gio" value="">
                             <?php if ($status_salary===true) { ?>
-                            <button disabled class="btn btn-success btn-lg">Đã chốt</button>
+                            <button disabled class="btn btn-warning btn-lg">Đã chốt</button>
                             <?php }else{ ?>
-                            <button type="submit" name="submit_chot_luong" class="btn btn-success btn-lg">Chốt
+                            <button type="submit" id="submit_chot_luong" class="btn btn-success btn-lg">Chốt
                               lương</button>
                             <?php } ?>
-                          </form>
+                          
                         </td>
                       </tr>
-                      <?php } ?>
                     </tbody>
 
                   </table>
@@ -244,10 +243,25 @@
 
 $('#select_teacher').select2();
 
-$( "#select_teacher" ).change(function () {
-    console.log($(this).value)
-  })
 
+$('#submit_chot_luong').click(function (e) { 
+  let object_param={
+    id_teacher:$('[name="id_teacher"]').val(),
+    luong_cua_thang:$('[name="luong_cua_thang"]').val(),
+    tien_luong:$('[name="tien_luong"]').val(),
+    he_so_luong:$('[name="he_so_luong"]').val(),
+    so_gio:$('[name="so_gio"]').val()
+  }
+  $.ajax({
+    type: "GET",
+    url: "{{route('salary_check')}}",
+    data: object_param,
+    success: function (response) {
+      $('#submit_chot_luong').removeClass( "btn-success").addClass("btn-warning")
+      $('#submit_chot_luong').onclick = null;
+    }
+  });
+});
 </script>
 
 @endsection

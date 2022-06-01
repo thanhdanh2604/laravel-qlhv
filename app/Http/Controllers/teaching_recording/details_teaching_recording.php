@@ -37,10 +37,9 @@ class details_teaching_recording extends Controller
                 $study_hour=0;
                 foreach ($objdd as $mon_hoc) {
                     foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
-
-                            if (isset($buoi_hoc->hours)) {
-                                $study_hour+= $buoi_hoc->hours;
-                            }
+                      if (isset($buoi_hoc->hours)) {
+                          $study_hour+= $buoi_hoc->hours;
+                      }
                     }
                 }
             $time_left= $data_teaching_recording->total_hours- $study_hour;

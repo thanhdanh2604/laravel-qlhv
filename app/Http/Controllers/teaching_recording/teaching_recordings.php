@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\teaching_recording;
 use App\Http\Controllers\Controller;
 
@@ -9,6 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\M_teaching_recording;
 use App\Models\student;
+use App\Models\teacher;
+use App\Models\subject;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class teaching_recordings extends Controller
 {
@@ -193,4 +198,150 @@ class teaching_recordings extends Controller
         DB::table('teaching_recording')->where('id', '=', $id)->delete();
         return redirect()->route('teaching_recordings');
     }
+    /**
+     * Export pdf file  
+     * @param  int  $id
+     *
+     */
+    public function export_pdf_file(){
+      $pdf = PDF::loadView('test',['id'=>3])->setOptions(['defaultFont' => 'sans-serif']);
+      return $pdf->download('invoice.pdf');
+    }
+    public function view_teaching_recording_report($id_nkgd){
+        $month = isset($_GET['month'])?$_GET['month']:null;
+        $data  = M_teaching_recording::find($id_nkgd);
+        $students = student::pluck('full_name','id_student');
+        $teachers = teacher::pluck('fullname','id_teacher');
+        $subjects = subject::pluck('name','id');
+        $study_info = details_teaching_recording::getStudyInfo($id_nkgd);
+         //Lấy giờ thực tế để so sánh với giờ fill ra vì thỉnh thoản có trường hợp bé HỌC TRƯỚC giờ ghi trong hóa đơn
+        $giodahoc =  $study_info['study_hours'];
+        $time_left =  $study_info['time_left'];
+        // Lấy tên học sinh
+        if($data->type==2){
+          $json_id_students = json_decode($data->id_student);
+          $student_name="";
+          foreach ($json_id_students as  $value_id_student) {
+            $student_name .= (isset($students[$value_id_student])?$students[$value_id_student]:'')."</br>";
+          };
+        }elseif($data->type==1){
+          $student_name = isset($students[$data->id_student])?$students[$data->id_student]:'';
+        }
+        // Lấy gói giờ gần nhất
+        $obj_renew_history = json_decode($data->renew_history);
+        $amount_of_hours_last_package =  end($obj_renew_history)->so_gio;
+        
+        if($month!=null){
+          //Báo cáo theo tháng
+          $current_year = substr($month,0,4);
+          $current_month = substr($month,5,7);
+          $amount_of_months = date('t',strtotime('01-'.$current_month.'-'.$current_year));
+          $start = strtotime($current_month."/01/".$current_year);
+          $end = strtotime($current_month."/".$amount_of_months."/".$current_year);
+        }else{
+          //Lấy giờ bắt đầu và kết thúc nếu được set hoặc lấy của gói gần nhất
+          $start = isset($_GET['start'])?$_GET['start']:strtotime(end($obj_renew_history)->ngay_bat_dau);;
+          $end = isset($_GET['end'])?$_GET['end']:strtotime('Today');
+        }
+
+
+        // Lấy các buổi dựa vào $start và $end lưu vào mảng mới
+        $obj_teaching_history = json_decode($data->teaching_history);
+        $array_new_teaching_history=array();
+        $array_temp=array();
+        foreach ($obj_teaching_history as $object_mon) {
+          $teacherName = isset($teachers[$object_mon->ma_giao_vien])?$teachers[$object_mon->ma_giao_vien]:'';
+          $subjectName = isset($subjects[$object_mon->ma_mon])?$subjects[$object_mon->ma_mon]:'';
+          foreach ($object_mon->lich_hoc_du_kien as $chi_tiet_buoi_hoc) {
+            
+              if($chi_tiet_buoi_hoc->time>=$start&& $chi_tiet_buoi_hoc->time<=$end){
+                $chi_tiet_buoi_hoc->teacher_name = $teacherName;
+                $chi_tiet_buoi_hoc->subject_name = $subjectName;
+                // $chi_tiet_buoi_hoc->date = $time;
+                $array_new_teaching_history[]=$chi_tiet_buoi_hoc;
+              }
+            
+          }
+        }
+      return view('pages.teaching_recording.view_report',[
+        'data'=>$data,
+        'student_name'=>$student_name,
+        'start'=>$start,
+        'end'=>$end,
+        'month'=>$month,
+        'id_nkgd'=>$id_nkgd,
+        'amount_of_hours_last_package'=>$amount_of_hours_last_package,
+        'array_new_teaching_history'=>$array_new_teaching_history,
+        'time_left'=>$time_left
+      ]);
+    }
+    public function export_report_teaching_recording($id_nkgd){
+      $month = isset($_GET['month'])?$_GET['month']:null;
+      $data  = M_teaching_recording::find($id_nkgd);
+      $students = student::pluck('full_name','id_student');
+      $teachers = teacher::pluck('fullname','id_teacher');
+      $subjects = subject::pluck('name','id');
+      $study_info = details_teaching_recording::getStudyInfo($id_nkgd);
+       //Lấy giờ thực tế để so sánh với giờ fill ra vì thỉnh thoản có trường hợp bé HỌC TRƯỚC giờ ghi trong hóa đơn
+      $giodahoc =  $study_info['study_hours'];
+      $time_left =  $study_info['time_left'];
+      // Lấy tên học sinh
+      if($data->type==2){
+        $json_id_students = json_decode($data->id_student);
+        $student_name="";
+        foreach ($json_id_students as  $value_id_student) {
+          $student_name .= (isset($students[$value_id_student])?$students[$value_id_student]:'')."</br>";
+        };
+      }elseif($data->type==1){
+        $student_name = isset($students[$data->id_student])?$students[$data->id_student]:'';
+      }
+      // Lấy gói giờ gần nhất
+      $obj_renew_history = json_decode($data->renew_history);
+      $amount_of_hours_last_package =  end($obj_renew_history)->so_gio;
+      
+      if($month!=null){
+        //Báo cáo theo tháng
+        $current_year = substr($month,0,4);
+        $current_month = substr($month,5,7);
+        $amount_of_months = date('t',strtotime('01-'.$current_month.'-'.$current_year));
+        $start = strtotime($current_month."/01/".$current_year);
+        $end = strtotime($current_month."/".$amount_of_months."/".$current_year);
+      }else{
+        //Lấy giờ bắt đầu và kết thúc nếu được set hoặc lấy của gói gần nhất
+        $start = isset($_GET['start'])?$_GET['start']:strtotime(end($obj_renew_history)->ngay_bat_dau);;
+        $end = isset($_GET['end'])?$_GET['end']:strtotime('Today');
+      }
+
+
+      // Lấy các buổi dựa vào $start và $end lưu vào mảng mới
+      $obj_teaching_history = json_decode($data->teaching_history);
+      $array_new_teaching_history=array();
+      $array_temp=array();
+      foreach ($obj_teaching_history as $object_mon) {
+        $teacherName = isset($teachers[$object_mon->ma_giao_vien])?$teachers[$object_mon->ma_giao_vien]:'';
+        $subjectName = isset($subjects[$object_mon->ma_mon])?$subjects[$object_mon->ma_mon]:'';
+        foreach ($object_mon->lich_hoc_du_kien as $chi_tiet_buoi_hoc) {
+          
+            if($chi_tiet_buoi_hoc->time>=$start&& $chi_tiet_buoi_hoc->time<=$end){
+              $chi_tiet_buoi_hoc->teacher_name = $teacherName;
+              $chi_tiet_buoi_hoc->subject_name = $subjectName;
+              // $chi_tiet_buoi_hoc->date = $time;
+              $array_new_teaching_history[]=$chi_tiet_buoi_hoc;
+            }
+          
+        }
+      }
+      $pdf = PDF::loadView('pages.teaching_recording.export_report',[
+        'data'=>$data,
+        'student_name'=>$student_name,
+        'start'=>$start,
+        'end'=>$end,
+        'month'=>$month,
+        'id_nkgd'=>$id_nkgd,
+        'amount_of_hours_last_package'=>$amount_of_hours_last_package,
+        'array_new_teaching_history'=>$array_new_teaching_history,
+        'time_left'=>$time_left
+      ])->setOptions(['defaultFont' => 'Roboto']);
+      return $pdf->stream();
+  }
 }

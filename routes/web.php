@@ -53,6 +53,13 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/add_new',[teaching_recordings::class,'store']);
         Route::get('/update/{id}', [teaching_recordings::class,'update']);
         Route::post('/edit', [teaching_recordings::class,'edit'])->name('edit_teaching_recording');
+        /**
+         * report processing
+         */
+        Route::prefix('report')->group(function () {
+          Route::get('/{id}', [teaching_recordings::class,'view_teaching_recording_report'])->name('view_nkgd_report');
+          Route::get('/export/{id}', [teaching_recordings::class,'export_report_teaching_recording'])->name('export_report');
+        });
         Route::prefix('detail')->group(function(){
             /**
              * Các hàm dưới xử lý trong chi tiết nhật ký, chủ yếu thao tác trong cột"teaching_history" trong bản "teaching_recording"
@@ -94,12 +101,12 @@ Route::group(['middleware' => 'auth'], function(){
         });
     });
     Route::prefix('payment')->group(function () {
-    //     Route::get('/',[payment::class,'index']);
         Route::get('/',[payments::class,'index'])->name('payment');
         Route::get('/update',[payments::class,'update_once'])->name('payment_update');
         Route::get('/teaching_statistics',[teaching_statistics::class,'index'])->name('teaching_statistics');
         Route::get('/get_all_teaching_hours',[teaching_statistics::class,'get_all_teaching_hours'])->name('get_all_teaching_hours');
         Route::get('/teaching_details/{id_teacher}',[teaching_statistics::class,'teaching_detail'])->name('teaching_details');
+        Route::get('/salary_check',[payments::class,'salary_check'])->name('salary_check');
     });
 });
 
@@ -111,8 +118,6 @@ Route::group(['middleware' => 'auth'], function(){
 // });
 
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
-
-
-
+Route::get('/test',[teaching_recordings::class,'export_pdf_file']);
 
 require __DIR__.'/auth.php';

@@ -141,15 +141,5 @@ class teaching_statistics extends Controller
         return $array_temp;
 
     }
-    function salary_check( Request $request){
-      //insert salary check log
-      $teacher_payment = new teacher_payment;
-      $teacher_payment->id_teacher = $request->input('id_teacher');
-      $teacher_payment->luong_cua_thang = $request->input('luong_cua_thang');
-      $teacher_payment->so_tien = $request->input('tien_luong');
-      $teacher_payment->he_so_luong = $request->input('he_so_luong');
-      $teacher_payment->so_gio = $request->input('so_gio');
-      $teacher_payment->date_checked = strtotime('now');
-      $teacher_payment->save(); 
-    }
+    
 } 

@@ -216,10 +216,9 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="btn-group btn-sm">
-                                        <a href="teaching_recordings/detail/{{$teaching_recording->id}}" class="btn btn-info">Detail</a>
-                                        <a href="{{url('teaching_recordings/delete/'.$teaching_recording->id)}}" onclick="return confirm('Bạn có chắc xóa nhật ký giảng dạy {{$teaching_recording->name}}?')" class="btn btn-danger form-control">Delete</a>
-                                    </div>
+                                    <a href="teaching_recordings/detail/{{$teaching_recording->id}}" class="btn btn-info">Detail</a>
+                                    <a href="{{url('teaching_recordings/delete/'.$teaching_recording->id)}}" onclick="return confirm('Bạn có chắc xóa nhật ký giảng dạy {{$teaching_recording->name}}?')" class="btn btn-danger">Delete</a>
+                                    <a class="btn btn-warning" href="{{route('view_nkgd_report',['id'=>$teaching_recording->id])}}">Report</a>
                                 </td>
                             </tr>
                             @endforeach
