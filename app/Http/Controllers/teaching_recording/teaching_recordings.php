@@ -199,7 +199,7 @@ class teaching_recordings extends Controller
         return redirect()->route('teaching_recordings');
     }
     /**
-     * Export pdf file  
+     * Export pdf file
      * @param  int  $id
      *
      */
@@ -230,7 +230,7 @@ class teaching_recordings extends Controller
         // Lấy gói giờ gần nhất
         $obj_renew_history = json_decode($data->renew_history);
         $amount_of_hours_last_package =  end($obj_renew_history)->so_gio;
-        
+
         if($month!=null){
           //Báo cáo theo tháng
           $current_year = substr($month,0,4);
@@ -253,14 +253,14 @@ class teaching_recordings extends Controller
           $teacherName = isset($teachers[$object_mon->ma_giao_vien])?$teachers[$object_mon->ma_giao_vien]:'';
           $subjectName = isset($subjects[$object_mon->ma_mon])?$subjects[$object_mon->ma_mon]:'';
           foreach ($object_mon->lich_hoc_du_kien as $chi_tiet_buoi_hoc) {
-            
+
               if($chi_tiet_buoi_hoc->time>=$start&& $chi_tiet_buoi_hoc->time<=$end){
                 $chi_tiet_buoi_hoc->teacher_name = $teacherName;
                 $chi_tiet_buoi_hoc->subject_name = $subjectName;
                 // $chi_tiet_buoi_hoc->date = $time;
                 $array_new_teaching_history[]=$chi_tiet_buoi_hoc;
               }
-            
+
           }
         }
       return view('pages.teaching_recording.view_report',[
@@ -298,7 +298,7 @@ class teaching_recordings extends Controller
       // Lấy gói giờ gần nhất
       $obj_renew_history = json_decode($data->renew_history);
       $amount_of_hours_last_package =  end($obj_renew_history)->so_gio;
-      
+
       if($month!=null){
         //Báo cáo theo tháng
         $current_year = substr($month,0,4);
@@ -321,14 +321,14 @@ class teaching_recordings extends Controller
         $teacherName = isset($teachers[$object_mon->ma_giao_vien])?$teachers[$object_mon->ma_giao_vien]:'';
         $subjectName = isset($subjects[$object_mon->ma_mon])?$subjects[$object_mon->ma_mon]:'';
         foreach ($object_mon->lich_hoc_du_kien as $chi_tiet_buoi_hoc) {
-          
+
             if($chi_tiet_buoi_hoc->time>=$start&& $chi_tiet_buoi_hoc->time<=$end){
               $chi_tiet_buoi_hoc->teacher_name = $teacherName;
               $chi_tiet_buoi_hoc->subject_name = $subjectName;
               // $chi_tiet_buoi_hoc->date = $time;
               $array_new_teaching_history[]=$chi_tiet_buoi_hoc;
             }
-          
+
         }
       }
       $pdf = PDF::loadView('pages.teaching_recording.export_report',[
@@ -341,7 +341,18 @@ class teaching_recordings extends Controller
         'amount_of_hours_last_package'=>$amount_of_hours_last_package,
         'array_new_teaching_history'=>$array_new_teaching_history,
         'time_left'=>$time_left
-      ])->setOptions(['defaultFont' => 'Roboto']);
+      ])->setOptions(['dpi' => 150,'defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
       return $pdf->stream();
+    // return view('pages.teaching_recording.export_report',[
+    //     'data'=>$data,
+    //     'student_name'=>$student_name,
+    //     'start'=>$start,
+    //     'end'=>$end,
+    //     'month'=>$month,
+    //     'id_nkgd'=>$id_nkgd,
+    //     'amount_of_hours_last_package'=>$amount_of_hours_last_package,
+    //     'array_new_teaching_history'=>$array_new_teaching_history,
+    //     'time_left'=>$time_left
+    //   ]);
   }
 }

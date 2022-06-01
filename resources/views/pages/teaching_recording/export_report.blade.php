@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <title>Intertu Teaching Report</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> --}}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
   <style>
+
     body{
         color:#1E4612;
-        font-family: Roboto;
+        font-family: 'Roboto', sans-serif;
         display: grid;
         justify-content: center;
       }
@@ -40,13 +45,13 @@
       }
       table{
         width: 100%;
-        
+
       }
       thead tr {
         background-color: #1E4612;
         color: white;
       }
-      table{
+      table .table_content{
         border-collapse: collapse;
       }
       th,td{
@@ -59,7 +64,7 @@
       }
       tfoot{
         font-weight: bold;
-        
+
       }
       div#page_right {
         border-left: 1px solid #1E4612;
@@ -119,34 +124,45 @@
 <body>
   <div id="main_content">
     <div class="header">
-        <div class="header_img">
+        {{-- <div class="header_img">
           <img src="/img/logo-edu(trang).png" alt="Logo intertu">
-        </div>
-        <div class="header_info_student">
-          <p><strong>ID:</strong> <?php echo $data['ma_lop'] ?></p>
-          <p><strong>Student:</br></strong> <?php  echo $student_name ?></p>
-        </div>
-        <div class="header_info_subject">
-          <p><strong>Class name:</br></strong> <?php echo $data['name'] ?></p>
-          <div><strong>Duration: </strong><?php echo date('d/m/Y',$start).' - '.date('d/m/Y',$end) ?></div>
-        </div>
-        <div class="header_package">
-          <div class="package_hours">
-            <?php if($month==''){ ?>
-            <strong>Package: <p></strong> 
-            <span class="package_hour"><?php echo $amount_of_hours_last_package ?></span>  
-            <p>hours</p>
-            <?php }else{
-              echo "<span class=\"package_hour\">Report Monthly</span>";
-            } ?>
-          </div>
-        </div>
+        </div> --}}
+        <table>
+            <tbody>
+                <tr>
+                    <td scope="row">
+                        <div class="header_info_student">
+                        <p><strong>ID:</strong> <?php echo $data['ma_lop'] ?></p>
+                        <p><strong>Student:</br></strong> <?php  echo $student_name ?></p>
+                      </div>
+                    </td>
+                    <td>
+                        <div class="header_info_subject">
+                            <p><strong>Class name:</br></strong> <?php echo $data['name'] ?></p>
+                            <div><strong>Duration: </strong><?php echo date('d/m/Y',$start).' - '.date('d/m/Y',$end) ?></div>
+                          </div>
+                    </td>
+                    <td>
+                        <div class="header_package">
+                            <div class="package_hours">
+                              <?php if($month==''){ ?>
+                              <strong>Package: <p></strong>
+                              <span class="package_hour"><?php echo $amount_of_hours_last_package ?></span>
+                              <p>hours</p>
+                              <?php }else{
+                                echo "<span class=\"package_hour\">Report Monthly</span>";
+                              } ?>
+                            </div>
+                          </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
       </div>
     <div class="title">
         <h1>Intertu Teaching Report</h1>
     </div>
     <div class="table_content">
-        
         <table class="table table-bordered table-hover" style="text-align:center;border-collapse:collapse;">
           <thead>
             <tr>
@@ -162,11 +178,11 @@
             </tr>
           </thead>
           <tbody>
-            <?php $stt=1; 
+            <?php $stt=1;
                 foreach ($array_new_teaching_history as $time => $chi_tiet_buoi_hoc) {
                   // Kiểm tra tất cả những giờ đã tính cho bé và thời gian đó phải lớn hơn 0
                   if(isset($chi_tiet_buoi_hoc->hours)&&$chi_tiet_buoi_hoc->hours>0){
-               ?>           
+               ?>
                   <tr>
                     <td><?php echo $stt; ?></td>
                     <td><?php echo $chi_tiet_buoi_hoc->date ?></td>
@@ -191,7 +207,7 @@
                         <span >
                           <?php echo isset($chi_tiet_buoi_hoc->notes)?$chi_tiet_buoi_hoc->notes:'';?>
                         </span>
-                      
+
                     </td>
                   </tr>
             <?php $stt++; } }?>
@@ -205,15 +221,7 @@
             </tr>
           </tbody>
         </table>
-        
     </div>
-    <div class="footer">
-      
-    </div>
-
-
-
-    
   </div>
 </body>
 </html>
