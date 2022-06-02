@@ -13,6 +13,8 @@ use App\Http\Controllers\teaching_recording\details_teaching_recording;
 use App\Http\Controllers\payment\payments;
 use App\Http\Controllers\payment\teaching_statistics;
 
+use Illuminate\Support\Facades\Artisan;
+
 
 
 /*
@@ -119,5 +121,10 @@ Route::group(['middleware' => 'auth'], function(){
 
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
 Route::get('/test',[teaching_recordings::class,'export_pdf_file']);
-
+Route::get('/cacheclear', function(){
+  artisan::call('cache:clear');
+});
+Route::get('/conficache', function(){
+  artisan::call('config:cache');
+});
 require __DIR__.'/auth.php';

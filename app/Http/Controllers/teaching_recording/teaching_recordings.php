@@ -341,7 +341,7 @@ class teaching_recordings extends Controller
         'amount_of_hours_last_package'=>$amount_of_hours_last_package,
         'array_new_teaching_history'=>$array_new_teaching_history,
         'time_left'=>$time_left
-      ])->setOptions(['dpi' => 150,'defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+      ])->setPaper('a4', 'landscape');
       return $pdf->stream();
     // return view('pages.teaching_recording.export_report',[
     //     'data'=>$data,
