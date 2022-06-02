@@ -364,18 +364,13 @@ class details_teaching_recording extends Controller
     }
     // Thêm note
     public function add_note_of_date(Request $request){
-        $validate = $request->validate([
-            'id_nkgd'=> ['required'],
-            'id_subject'=>['required'],
-            'id_teacher'=>['required'],
-            'time'=>['required'],
-            'note'=>['required']
-        ]);
+        
         $id = $request->input('id_nkgd');
         $id_subject = $request->input('id_subject');
         $id_teacher = $request->input('id_teacher');
         $time = $request->input('time');
         $note = $request->input('note');
+        $type_note = $request->input('type_note');
         $status = 'false';
         // Lấy dữ liệu teaching history cũ
         $data_teaching_recording = M_teaching_recording::find($request->input('id_nkgd'));
@@ -385,6 +380,9 @@ class details_teaching_recording extends Controller
                 foreach ($mon_hoc->lich_hoc_du_kien as $key=>$buoi_hoc) {
                     if($time == $buoi_hoc->time){
                         $buoi_hoc->note= $note;
+                        if($type_note!=null){
+                          $buoi_hoc->$type_note= $note;
+                        }
                         $status = 'success';
                         break;
                     }else{

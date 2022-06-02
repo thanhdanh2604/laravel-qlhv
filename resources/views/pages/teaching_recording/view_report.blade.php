@@ -203,10 +203,10 @@
                       <i class="material-icons lesson_note">mode_edit</i>
                      
                       <div style="display:none" class="block_edit">
-                        <textarea id="lesson_note_content_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->lesson_note)?$chi_tiet_buoi_hoc->lesson_note:'';?></textarea>
-                        <button class="save_lesson_note" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->date;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Edit</button>
+                        <textarea id="lesson_note_content_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->lesson_note)?$chi_tiet_buoi_hoc->lesson_note:'';?></textarea>
+                        <button class="save_lesson_note" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->time;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Save</button>
                       </div>
-                      <p style="font-size: 12px;color:red" id="error_lesson_note_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>"></p>
+                      <p style="font-size: 12px;color:red" id="error_lesson_note_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>"></p>
                     </td>
                     <td>
                       <span>
@@ -214,10 +214,10 @@
                       </span>
                       <i class="material-icons comment_note">mode_edit</i>
                       <div style="display:none" class="block_edit">
-                        <textarea id="comment_note_content_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->note_comment)?$chi_tiet_buoi_hoc->note_comment:'';?></textarea>
-                        <button class="save_comment_note" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->date;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Edit</button>
+                        <textarea id="comment_note_content_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->note_comment)?$chi_tiet_buoi_hoc->note_comment:'';?></textarea>
+                        <button class="save_comment_note" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->time;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Save</button>
                       </div>
-                      <p style="font-size: 12px;color:red" id="error_comment_note_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>"></p>
+                      <p style="font-size: 12px;color:red" id="error_comment_note_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>"></p>
                     </td>
                     <td><?php echo $chi_tiet_buoi_hoc->teacher_name;?></td>
                     <td class="hour"><?php
@@ -229,10 +229,10 @@
                         </span>
                         <i class="material-icons notes">mode_edit</i>
                         <div style="display:none" class="block_edit">
-                          <textarea id="notes_content_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->notes)?$chi_tiet_buoi_hoc->notes:'';?></textarea>
-                          <button class="save_notes" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->date;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Edit</button>
+                          <textarea id="notes_content_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>" cols="30" ><?php echo isset($chi_tiet_buoi_hoc->notes)?$chi_tiet_buoi_hoc->notes:'';?></textarea>
+                          <button class="save_notes" stt="<?php echo $stt; ?>" date="<?php echo $chi_tiet_buoi_hoc->time;?>" id_nkgd="<?php echo $id_nkgd; ?>" id_subject="<?php echo $chi_tiet_buoi_hoc->id_subject?>" id_teacher="<?php echo $chi_tiet_buoi_hoc->id_prof ?>">Save</button>
                         </div>
-                        <p style="font-size: 12px;color:red" id="error_notes_<?php echo $chi_tiet_buoi_hoc->date."_".$stt; ?>"></p>
+                        <p style="font-size: 12px;color:red" id="error_notes_<?php echo $chi_tiet_buoi_hoc->time."_".$stt; ?>"></p>
                     </td>
                   </tr>
             <?php $stt++; } }?>
@@ -328,20 +328,25 @@
       $('.save_comment_note').click(function (e) { 
         let date = $(this).attr("date");
         let stt = $(this).attr("stt");
+        let id_nkgd = $(this).attr("id_nkgd");
+        let id_subject = $(this).attr("id_subject");
+        let id_teacher = $(this).attr("id_teacher");
+
         let value_note = $('#comment_note_content_'+date+'_'+stt).val();
+
         let object_param={
-            id:$(this).attr("id_nkgd"),
-            mytime: date,
+            id_nkgd:id_nkgd,
+            time: date,
             note:value_note,
-            subject:$(this).attr("id_subject"),
-            ma_giao_vien:$(this).attr("id_teacher"),
+            id_subject:id_subject,
+            id_teacher:id_teacher ,
             type_note:'note_comment'
         }
         $(this).parent().prev().prev().text(value_note);
         $(this).parent().hide(500);
         $.ajax({
           type: "GET",
-          url: "./send-note.php",
+          url: "{{route('add_note_of_date')}}",
           data: object_param,
           success: function (response) {
             $('#error_comment_note_'+date+'_'+stt).text('Saved!');
@@ -351,20 +356,25 @@
       $('.save_notes').click(function (e) { 
         let date = $(this).attr("date");
         let stt = $(this).attr("stt");
+        let id_nkgd = $(this).attr("id_nkgd");
+        let id_subject = $(this).attr("id_subject");
+        let id_teacher = $(this).attr("id_teacher");
+
         let value_note = $('#notes_content_'+date+'_'+stt).val();
+
         let object_param={
-            id:$(this).attr("id_nkgd"),
-            mytime: date,
+            id_nkgd:id_nkgd,
+            time: date,
             note:value_note,
-            subject:$(this).attr("id_subject"),
-            ma_giao_vien:$(this).attr("id_teacher"),
+            id_subject:id_subject,
+            id_teacher:id_teacher ,
             type_note:'notes'
         }
         $(this).parent().hide(500);
         $(this).parent().prev().prev().text(value_note);
         $.ajax({
           type: "GET",
-          url: "./send-note.php",
+          url: "{{route('add_note_of_date')}}",
           data: object_param,
           success: function (response) {
             $('#error_notes_'+date+'_'+stt).text('Saved!');
@@ -374,24 +384,31 @@
       $('.save_lesson_note').click(function (e) { 
         let date = $(this).attr("date");
         let stt = $(this).attr("stt");
+        let id_nkgd = $(this).attr("id_nkgd");
+        let id_subject = $(this).attr("id_subject");
+        let id_teacher = $(this).attr("id_teacher");
+
         let value_note = $('#lesson_note_content_'+date+'_'+stt).val();
 
         let object_param={
-            id:$(this).attr("id_nkgd"),
-            mytime: date,
+            id_nkgd:id_nkgd,
+            time: date,
             note:value_note,
-            subject:$(this).attr("id_subject"),
-            ma_giao_vien:$(this).attr("id_teacher"),
+            id_subject:id_subject,
+            id_teacher:id_teacher ,
             type_note:'lesson_note'
         }
         $(this).parent().hide(500);
         $(this).parent().prev().prev().text(value_note);
         $.ajax({
           type: "GET",
-          url: "./send-note.php",
+          url: "{{route('add_note_of_date')}}",
           data: object_param,
           success: function (response) {
-            $('#error_lesson_note_'+date+'_'+stt).text('Saved!');
+            if(response.status == 'success'){
+              $('#error_lesson_note_'+date+'_'+stt).text('Saved!');
+            }
+            
           }
         });
       });

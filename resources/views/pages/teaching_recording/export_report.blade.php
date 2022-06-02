@@ -180,6 +180,7 @@
           </thead>
           <tbody>
             <?php $stt=1;
+                $total_hous = 0;
                 foreach ($array_new_teaching_history as $time => $chi_tiet_buoi_hoc) {
                   // Kiểm tra tất cả những giờ đã tính cho bé và thời gian đó phải lớn hơn 0
                   if(isset($chi_tiet_buoi_hoc->hours)&&$chi_tiet_buoi_hoc->hours>0){
@@ -203,6 +204,7 @@
                     <td><?php echo $chi_tiet_buoi_hoc->teacher_name;?></td>
                     <td class="hour"><?php
                       echo $chi_tiet_buoi_hoc->hours;
+                      $total_hous+=$chi_tiet_buoi_hoc->hours;
                      ?></td>
                     <td>
                         <span >
@@ -214,11 +216,11 @@
             <?php $stt++; } }?>
             <tr>
               <td colspan=7><strong>Total hours of studying</strong></td>
-              <td colspan=2 id="total_hours"></td>
+              <td colspan=2 id="total_hours"><?php echo $total_hous; ?></td>
             </tr>
             <tr>
               <td colspan=7><strong>Number remaining hours of the current package</strong></td>
-              <td colspan=2 id="time_left"></td>
+              <td colspan=2 id="time_left"><?php echo $amount_of_hours_last_package-$total_hous ?></td>
             </tr>
           </tbody>
         </table>
