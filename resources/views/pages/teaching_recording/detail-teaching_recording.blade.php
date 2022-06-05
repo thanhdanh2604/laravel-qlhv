@@ -278,12 +278,12 @@
                     @foreach ($obj_teaching_history as $obj_mon_hoc)
                     @if(!isset($obj_mon_hoc->finish))
                     @php
-                   $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                   $teacher_name = isset($teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
                     @endphp
                     <div id="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}">
                         <div class="d-flex justify-content-between">
                             <div>
-                                {{array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher'}}
+                                {{isset($teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher'}}
                                 <span class="f-w-900">{{$teacher_name}}</span> ---
                                 <span class="f-w-900 text-danger">{{$subjects[$obj_mon_hoc->ma_mon]}}</span>
                             </div>
@@ -420,7 +420,7 @@
         @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
             @if(!isset($obj_mon_hoc->finish))
             @php
-            $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+            $teacher_name = isset($teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
             @endphp
             <li>
                 <a class="btn" href="#{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}" type="button" class="">{{$teacher_name}}-{{$subjects[$obj_mon_hoc->ma_mon]}}
@@ -545,7 +545,7 @@
                                     @foreach (json_decode($teaching_recording->teaching_history) as $key_obj=>$obj_mon_hoc)
                                         @if(!isset($obj_mon_hoc->finish)){
                                         @php
-                                        $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                                        $teacher_name = isset($teachers[$obj_mon_hoc->ma_giao_vien])?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
                                             @endphp
                                         <option value="{{$obj_mon_hoc->ma_giao_vien."_".$obj_mon_hoc->ma_mon}}">{{$teacher_name}} - {{$subjects[$obj_mon_hoc->ma_mon]}}</option>
 
