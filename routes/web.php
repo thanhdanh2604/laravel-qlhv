@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Artisan;
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('/', [ban_tin::class, 'index'])->name('/');
     route::get('/calendar',[calendar::class,'index'])->name('calendar');// incomplete
+    Route::get('/subject',[subjects::class,'']);//TODO: controller
     Route::prefix('teachers')->group(function () {
         Route::get('/', [teacher::class, 'index'])->name('teachers');
         Route::get('/detail/{id}', [teacher::class, 'show'])->name('teacher_detail');

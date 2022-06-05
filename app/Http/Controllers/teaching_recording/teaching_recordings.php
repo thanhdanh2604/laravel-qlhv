@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\teaching_recording;
 use App\Http\Controllers\Controller;
 

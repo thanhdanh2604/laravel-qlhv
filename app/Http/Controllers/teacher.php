@@ -44,7 +44,7 @@ class teacher extends Controller
             'phone'=>['unique:teacher']
         ]);
         //Create Teacher
-        $name = $request->input('name');
+        $name = $request->input('fullname');
         $id_class = $request->input('ma_lop');
         $email= $request->input('email');
         $phone = $request->input('mobileno');
