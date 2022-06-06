@@ -43,6 +43,7 @@ class ban_tin extends Controller
                     foreach ($value1->lich_hoc_du_kien as $buoi_hoc) {
                         if (date('d-m-Y',$buoi_hoc->time) === date('d-m-Y',$days)) {
                             $buoi_hoc->id_prof = $value1->ma_giao_vien;
+                            $buoi_hoc->id_subject = $value1->ma_mon;
                             $buoi_hoc->id_student = $value['id_student'];
                             $buoi_hoc->id = $value['id'];
                             $array[] = $buoi_hoc;

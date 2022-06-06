@@ -364,7 +364,7 @@ class details_teaching_recording extends Controller
     }
     // Thêm note
     public function add_note_of_date(Request $request){
-        
+
         $id = $request->input('id_nkgd');
         $id_subject = $request->input('id_subject');
         $id_teacher = $request->input('id_teacher');
@@ -662,7 +662,7 @@ class details_teaching_recording extends Controller
         $ngay_can_check = intval($ngay_can_check);
 
         // So sánh các khung giờ từ đầu tới cuối đề phòng học vụ điểm danh lại những ngày cũ
-        if(count($data_renew_history)>1){// lặp từ đầu tới gần cuối
+        if($data_renew_history!=null &&count($data_renew_history)>1){// lặp từ đầu tới gần cuối
             for ($i=0; $i < count($data_renew_history)-1 ; $i++) {
                 $start = strtotime($data_renew_history[$i]->ngay_bat_dau);
                 $end = strtotime($data_renew_history[$i+1]->ngay_bat_dau);
