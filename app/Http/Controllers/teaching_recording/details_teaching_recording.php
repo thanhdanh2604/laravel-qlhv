@@ -299,14 +299,6 @@ class details_teaching_recording extends Controller
     // Thêm nhiều buổi
     public function add_day_range_teaching_history(Request $request){
 
-        $validate = $request->validate([
-            'id'=>['required'],
-            'id_student'=>['required'],
-            'start_date'=>['required'],
-            'end_date'=>['required'],
-            'lich_hoc'=>['required'],
-            'select_packet'=>['required']
-        ]);
         // Lấy chuỗi packet ra đầu tiên là mã gv, phần tử thứ 2 là mã môn hộc
         $array_packet = explode('_', $request->select_packet);
         $id_teacher = $array_packet[0];
@@ -340,22 +332,25 @@ class details_teaching_recording extends Controller
 
         foreach ($obj_teaching_history as $mon_hoc) {
             if($mon_hoc->ma_giao_vien ==$id_teacher && $mon_hoc->ma_mon ==$id_subject){
-                    if($mon_hoc->lich_hoc_du_kien==null){
-                        foreach ($array_date_range as $buoi_hoc_moi) {
-                            array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
-                        }
-                    }else{
-                        foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
-                            foreach ($array_date_range as $buoi_hoc_moi) {
-                                if($buoi_hoc_moi['date'] == $buoi_hoc->date
-                                && $buoi_hoc_moi['starttime'] == $buoi_hoc->starttime ){
-                                    continue;// Bỏ qua những buổi bị trùng
-                                }else{
-                                    array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
-                                }
-                            }
-                        }
-                    }
+              if($mon_hoc->lich_hoc_du_kien==null){
+                  foreach ($array_date_range as $buoi_hoc_moi) {
+                      array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
+                  }
+              }else{
+                foreach ($array_date_range as $buoi_hoc_moi) {
+                  $flag = false;
+                  foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
+                      if($buoi_hoc_moi['date'] === $buoi_hoc->date
+                      && $buoi_hoc_moi['starttime'] === $buoi_hoc->starttime ){
+                        $flag = true;
+                        break;
+                      }
+                  }
+                  if($flag===false){
+                    array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
+                  }
+                }
+              }
             }
         }
         $data_teaching_history->teaching_history = json_encode($obj_teaching_history);

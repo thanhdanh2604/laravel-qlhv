@@ -605,13 +605,13 @@
                             <input id="json_lich_hoc" name="lich_hoc" hidden type="text">
                             <label class="f-w-600" style="margin-top:20px;color:red;font-size:20px"> Step 1: Pick Subject:</label>
                             <div class="form-group">
-                                <select id="selectpacket" name="select_packet" class="form-control">
-                                    <option selected="">Pick one</option>
+                                <select id="selectpacket" required name="select_packet" class="form-control">
+                                    <option selected="" disable>Pick one</option>
                                     @if(isset($teaching_recording->teaching_history))
                                         @foreach (json_decode($teaching_recording->teaching_history) as $obj_mon_hoc)
                                             @if(!isset($obj_mon_hoc->finish))
                                             @php
-                                            $teacher_name = array_key_exists($obj_mon_hoc->ma_giao_vien,$teachers)?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
+                                            $teacher_name = isset($teachers[$obj_mon_hoc->ma_giao_vien])?$teachers[$obj_mon_hoc->ma_giao_vien]:'Deleted teacher';
                                              @endphp
                                             <option value="{{$obj_mon_hoc->ma_giao_vien}}_{{$obj_mon_hoc->ma_mon}}">
                                                 Giáo viên: {{$teacher_name}} - Môn: {{$subjects[$obj_mon_hoc->ma_mon]}}
