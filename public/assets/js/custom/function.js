@@ -4,6 +4,7 @@ $(document).ready(function(){
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
+    var req = null;
     // Xử lý nút lưu tổng số giờ
     $('#total_hours').keypress(function (e) {
         if(e.which==13){
@@ -28,7 +29,9 @@ $(document).ready(function(){
 
     });
     $('.button__finish-subject').click(function(e){
-        e.preventDefault();
+      e.preventDefault();
+      $(this).prop('disabled', true);
+        
         if(confirm("Thao tác này sẽ Ẩn/ Hiện môn học đã hoàng thành, và không làm mất dữ liệu")==true){
             var object_param={
                 id_nkgd:$(this).attr("id_nkgd"),
@@ -56,7 +59,9 @@ $(document).ready(function(){
      * Xử lý Bảo lưu
      */
     // Nút bảo lưu gói giờ
-    $('.button__resever').click(function () {
+    $('.button__resever').click(function (e) {
+      e.preventDefault();
+        $(this).prop('disabled', true);
         var object_param={
             id_nkgd:$('[name="reserve_id_nkgd"]').val(),
             amount:$('[name="reserve_amountOfMonney"]').val(),
@@ -79,29 +84,38 @@ $(document).ready(function(){
         });
     });
     // Đổi tiền từ bảo lưu sang giờ
-    $('.from_revenue_to_hours').click(function () {
+    $('.from_revenue_to_hours').click(function (e) {
+        e.preventDefault();
+        $(this).prop('disabled', true);
         var object_param={
             id_nkgd:$('#covert_id_nkgd').val(),
             id_student:$('#convert_id_student').val(),
             amountOfMoney:$('#so_tien_can_chuyen').val(),
             hours:$('#covert_so_gio').val(),
         }
-        $.ajax({
-            type: "POST",
-            url: rootUrl+'/detail/reserve/to_hours',
-            data: object_param,
-            success: function (response) {
-                if(response.status=='success'){
-                   location.reload();
-                }
-                if(response.status=='false'){
-                    alert(response.messenger);
-                }
-            }
-        });
+        if (req) {
+          req.abort();
+        }
+        req = $.ajax({
+          type: "POST",
+          url: rootUrl+'/detail/reserve/to_hours',
+          data: object_param,
+          success: function (response) {
+              if(response.status=='success'){
+                req=null;
+                 location.reload();
+              }
+              if(response.status=='false'){
+                  alert(response.messenger);
+              }
+          }
+      });
+        
     });
     // Nut chuyển tiền bảo lưu sang học sinh khác
-    $('.button___transfer_reserve').click(function (){
+    $('.button___transfer_reserve').click(function (e){
+        e.preventDefault();
+        $(this).prop('disabled', true);
         var object_param={
             id_source_student:$('#transfer_id_source_student').val(),
             id_des_student:$('#transfer_id_des_student').val(),
@@ -125,7 +139,9 @@ $(document).ready(function(){
      * Các thao tác xử lý trên buổi
      */
     //Xử lý nút thêm buổi
-    $('.button__add-date').click(function () {
+    $('.button__add-date').click(function (e) {
+      e.preventDefault();
+        $(this).prop('disabled', true);
         var object_param={
             id_nkgd:$('[name=add_date_id_nkgd]').val(),
             id_teacher:$('[name=add_date_id_teacher]').val(),
@@ -151,7 +167,9 @@ $(document).ready(function(){
             }
         });
     });
-    $('.button__add-date-range').click(function () {
+    $('.button__add-date-range').click(function (e) {
+      e.preventDefault();
+        $(this).prop('disabled', true);
         var object_param={
             id_nkgd:$('[name=add_date_id_nkgd]').val(),
             id_teacher:$('[name=add_date_id_teacher]').val(),
@@ -178,7 +196,9 @@ $(document).ready(function(){
         });
     });
     // lệnh xóa ngày
-    $('.button__delete-date').click(function () {
+    $('.button__delete-date').click(function (e) {
+        e.preventDefault();
+        $(this).prop('disabled', true);
         let text = "Thao tác này sẽ xóa vĩnh viễn ngày này, bạn có chắc?";
         if(confirm(text)==true){
             var object_param={
@@ -354,8 +374,9 @@ $(document).ready(function(){
         });
     });
     // Nút đổi ngày
-    $('.btn-change-date').click(function () {
-
+    $('.btn-change-date').click(function (e) {
+      e.preventDefault();
+      $(this).prop('disabled', true);
         var object_param={
             id_nkgd:$('[name=id_nkgd]').val(),
             old_time: $('[name=old_time]').val(),
@@ -385,6 +406,8 @@ $(document).ready(function(){
      */
     // Nút lưu renew history
     $('.renew__add').click(function (e) {
+      e.preventDefault();
+      $(this).prop('disabled', true);
         let check_bao_luu= $('[name="reserve_plus"]').val();
         var object_param={
             id_nkgd:$('#renew_id').val(),
@@ -421,6 +444,27 @@ $(document).ready(function(){
                 }
             });
         }
+    });
+    $('input[key_name="ngay_bat_dau"],input[key_name="ngay_nhan"]').focusout(function (e) { 
+      var object_param={
+        id_nkgd:$(this).attr("id_nkgd"),
+        key:$(this).attr("key"),
+        key_name:$(this).attr("key_name"),
+        value:$(this).val()
+      }
+      $.ajax({
+          type: "GET",
+          url: rootUrl+'/detail/renew_history/edit',
+          data: object_param,
+          success: function (response) {
+              if(response.status=='success'){
+                  //   $('#0_sotientrengio').append('<i class=\"fas fa-check text-success\"></i>');
+                  alert("Saved!");
+              }else{
+                  alert("Lỗi, liên hệ web admin!")
+              }
+          }
+      });
     });
     $('.renew__edit').keypress(function (e) {
         if(e.which==13){

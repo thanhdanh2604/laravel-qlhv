@@ -329,33 +329,40 @@ class details_teaching_recording extends Controller
         /*
         * Kiểm tra có buổi nào trùng với lịch học cũ không, nếu có thì bỏ qua
         */
-
+       
         foreach ($obj_teaching_history as $mon_hoc) {
             if($mon_hoc->ma_giao_vien ==$id_teacher && $mon_hoc->ma_mon ==$id_subject){
+              $array_temp = array();
               if($mon_hoc->lich_hoc_du_kien==null){
                   foreach ($array_date_range as $buoi_hoc_moi) {
                       array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
                   }
               }else{
+                $array_temp = array();
+                $result = $mon_hoc->lich_hoc_du_kien;
                 foreach ($array_date_range as $buoi_hoc_moi) {
-                  $flag = false;
                   foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
-                      if($buoi_hoc_moi['date'] === $buoi_hoc->date
-                      && $buoi_hoc_moi['starttime'] === $buoi_hoc->starttime ){
-                        $flag = true;
-                        break;
-                      }
+                    $flag = false;
+                    if($buoi_hoc->date == $buoi_hoc_moi['date']
+                    && $buoi_hoc->starttime == $buoi_hoc_moi['starttime']){
+                      $flag = true;
+                      break;
+                    }
                   }
-                  if($flag===false){
-                    array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
+                  if($flag==false){
+                    // array_push($mon_hoc->lich_hoc_du_kien,$buoi_hoc_moi);
+                    $result[] =$buoi_hoc_moi;
                   }
                 }
+                $mon_hoc->lich_hoc_du_kien=$result;
               }
             }
         }
+       
         $data_teaching_history->teaching_history = json_encode($obj_teaching_history);
+        
         $data_teaching_history->save();
-        return redirect()->route('teaching_recording_detail',['id'=>$request->input('id')])->with('status', 'Thành công');;
+        return redirect()->route('teaching_recording_detail',['id'=>$request->input('id')])->with('status', 'Thành công');
     }
     // Thêm note
     public function add_note_of_date(Request $request){

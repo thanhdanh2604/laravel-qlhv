@@ -6,31 +6,21 @@ use App\Http\Controllers\ban_tin;
 use App\Http\Controllers\teacher;
 use App\Http\Controllers\student;
 use App\Http\Controllers\calendar;
-
+use App\Http\Controllers\C_subject;
 use App\Http\Controllers\teaching_recording\teaching_recordings;
 use App\Http\Controllers\teaching_recording\details_teaching_recording;
 
 use App\Http\Controllers\payment\payments;
 use App\Http\Controllers\payment\teaching_statistics;
 
+
 use Illuminate\Support\Facades\Artisan;
 
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('/', [ban_tin::class, 'index'])->name('/');
     route::get('/calendar',[calendar::class,'index'])->name('calendar');// incomplete
-    Route::get('/subject',[subjects::class,'']);//TODO: controller
+    Route::get('/subject',[C_subject::class,'get_all_subjects'])->name('subjects');
     Route::prefix('teachers')->group(function () {
         Route::get('/', [teacher::class, 'index'])->name('teachers');
         Route::get('/detail/{id}', [teacher::class, 'show'])->name('teacher_detail');
@@ -121,7 +111,7 @@ Route::group(['middleware' => 'auth'], function(){
 // });
 
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
-Route::get('/test',[teaching_recordings::class,'export_pdf_file']);
+Route::get('/test',[C_subject::class,'get_all_subjects']);
 Route::get('/cacheclear', function(){
   artisan::call('cache:clear');
 });

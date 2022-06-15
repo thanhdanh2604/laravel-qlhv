@@ -24,7 +24,7 @@
             <a href="#">Library</a>
          </li>
          <li>
-            <a href="#">Subject</a>
+            <a href="{{route('subjects')}}">Subject</a>
          </li>
          <li>
             <a href="#"> Admin & Payment</a>
