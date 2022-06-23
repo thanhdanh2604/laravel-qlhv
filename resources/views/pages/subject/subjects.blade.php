@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-title')
-	<h2>Dashboard <span>Intertu </span></h2>
+	<h2>Subjects <span> </span></h2>
 @endsection
 
 @section('breadcrumb-items')
@@ -26,11 +26,15 @@
         <div class="card-body">
             <div class="row ">
                 <div style="margin-left: 10px" class="col-lg-8 white-box">
-                    <table class="table" id="table-class">
+                    <table class="table cell-border" id="basic-1">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Subject name</th>
+                                <!-- <th>CTQT - CCQT</th>
+                                <th>Năm</th>
+                                <th>Phân Môn</th>
+                                <th>Cấp độ</th> -->
                                 <th>Tool</th>
                             </tr>
                         </thead>
@@ -39,18 +43,16 @@
 
                             <tr>
                                 <td><?php echo $stt; ?></td>
-
                                 <td>
                                     <?php echo $value->name; ?>
-                                        <span style="margin-left:5px ;padding:3px; border:1px solid green;border-radius:3px" data-toggle="collapse" href="#edit_name_subject_<?php echo $value->id; ?>" role="button" aria-expanded="false" aria-controls="collapseExample" class="glyphicon glyphicon-pencil btn-success"></span>
-
-                                    <div class="collapse" id="edit_name_subject_<?php echo $value->id; ?>">
-                                        <input type="text" id="name_subject_<?php echo $value->id; ?>" value="<?php echo $value->name; ?>">
-                                        <span onclick="edit_subject(<?php echo $value->id; ?>)" class="btn-sm btn-success">Edit</span>
-                                    </div>
-
+                                    <span class="input-group">
+                                      <span data-toggle="collapse" href="#edit_name_subject_<?php echo $value->id; ?>" role="button" aria-expanded="false" aria-controls="collapseExample" ><i data-feather="edit-3"></i></span>
+                                      <div class="collapse" id="edit_name_subject_<?php echo $value->id; ?>">
+                                          <input title="press enter to save!" type="text" id_subject="<?php echo $value->id; ?>" class="form-control update_subject" data_field="name" value="<?php echo $value->name; ?>">
+                                      </div>
+                                    </span>
                                 </td>
-                                <td> <div class="btn btn-danger"> Delete</div></td>
+                                <td> <div id_subject="<?php echo $value->id; ?>" class="btn btn-danger delete_subject"> Delete</div></td>
                             </tr>
                             <?php $stt++;} ?>
                         </tbody>
@@ -60,17 +62,17 @@
                 <div style=" margin-left:10px;position: sticky;" class="col-lg-3 white-box">
                     <div id="add-subject">
                         <h3> Add more Subject</h3>
-                        <form action="subject.php" method="GET" accept-charset="utf-8">
+                        <div accept-charset="utf-8">
                             <div class="form-group">
-                                <label>Subject Name:</label>
+                                <label for="subject_name">Subject Name:</label>
                                 <input id="subject_name" class="form-control" type="text" name="subject-name" value="" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label>Note: </label>
                                 <input class="form-control" type="text" name="des-subject" value="" placeholder="">
                             </div>
-                            <input name="add_button" class="btn btn-success" type="submit">
-                        </form>
+                            <button class="btn btn-info create_subject" type="submit">Add new Subject</button>
+                        </div>
                     </div>
                     <hr>
 
@@ -83,7 +85,72 @@
 @endsection
 
 @section('script')
-
+<script>
+  $.ajaxSetup({
+        headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+  $('.update_subject').keypress(function (e){
+      if(e.which===13){
+        var object_param={
+            id_subject:$(this).attr("id_subject"),
+            field:$(this).attr("data_field"),
+            value:$(this).val()
+          }
+          $.ajax({
+              type: "GET",
+              url:'{{route('update_subject_info')}}',
+              data: object_param,
+              success: function (response) {
+                  if(response.status=='success'){
+                    location.reload();
+                  }else if(response.status=='false'){
+                      alert(response.messenger);
+                  }
+              }
+        });
+      }
+    });
+    $('.create_subject').click(function (e){
+        let object_param={
+            subject_name:$("#subject_name").val(),
+            note:$("[name='des-subject']").val()
+          }
+          $.ajax({
+              type: "POST",
+              url:'{{route('create_subject')}}',
+              data: object_param,
+              success: function (response) {
+                if(response.status=='success'){
+                  location.reload()
+                }else if(response.status=='false'){
+                    alert(response.messenger);
+                }
+              }
+        });
+      
+    });
+    $('.delete_subject').click((e)=>{
+          e.preventDefault();
+          let object_param={
+            id_subject:e.target.getAttribute("id_subject")
+          }
+          $.ajax({
+              
+              url:'{{route('delete_subjects')}}',
+              type: "POST",
+              data: object_param,
+              success: function (response) {
+                if(response.status=='success'){
+                  location.reload()
+                }else if(response.status=='false'){
+                    alert(response.messenger);
+                }
+              }
+        });
+    })
+</script>
 <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}" ></script>
 <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}" ></script>
 <script src="{{ asset('assets/js/select2/select2.full.min.js') }}" ></script>

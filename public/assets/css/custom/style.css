@@ -8,3 +8,6 @@
   .night_panel{
   border-left: 10px solid black ;
   }
+ input[type="text"]{
+  border: 1px solid black!important;
+ }

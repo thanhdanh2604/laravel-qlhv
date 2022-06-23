@@ -18,9 +18,14 @@ use Illuminate\Support\Facades\Artisan;
 
 
 Route::group(['middleware' => 'auth'], function(){
-	Route::get('/', [ban_tin::class, 'index'])->name('/');
-    route::get('/calendar',[calendar::class,'index'])->name('calendar');// incomplete
-    Route::get('/subject',[C_subject::class,'get_all_subjects'])->name('subjects');
+	  Route::get('/', [ban_tin::class, 'index'])->name('/');
+    Route::get('/calendar',[calendar::class,'index'])->name('calendar');// incomplete
+    Route::prefix('subjects')->group(function(){
+      Route::get('/', [C_subject::class, 'get_all_subjects'])->name('subjects');
+      Route::get('/update', [C_subject::class,'update_subject'])->name('update_subject_info');
+      Route::post('/create', [C_subject::class,'create_subject'])->name('create_subject');
+      Route::post('/delete', [C_subject::class,'delete_subjects'])->name('delete_subjects');
+    });
     Route::prefix('teachers')->group(function () {
         Route::get('/', [teacher::class, 'index'])->name('teachers');
         Route::get('/detail/{id}', [teacher::class, 'show'])->name('teacher_detail');
@@ -111,7 +116,7 @@ Route::group(['middleware' => 'auth'], function(){
 // });
 
 Route::get('/fix_json',[details_teaching_recording::class,'new_teaching_history_json']);
-Route::get('/test',[C_subject::class,'get_all_subjects']);
+
 Route::get('/cacheclear', function(){
   artisan::call('cache:clear');
 });

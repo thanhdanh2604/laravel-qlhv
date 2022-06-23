@@ -20,9 +20,9 @@
          <li>
             <a href="{{route('teaching_recordings')}}">Teaching Recording</a>
          </li>
-         <li>
+         <!-- <li>
             <a href="#">Library</a>
-         </li>
+         </li> -->
          <li>
             <a href="{{route('subjects')}}">Subject</a>
          </li>
