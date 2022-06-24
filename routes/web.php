@@ -12,6 +12,7 @@ use App\Http\Controllers\teaching_recording\details_teaching_recording;
 
 use App\Http\Controllers\payment\payments;
 use App\Http\Controllers\payment\teaching_statistics;
+use App\Http\Controllers\users;
 
 
 use Illuminate\Support\Facades\Artisan;
@@ -105,6 +106,9 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/get_all_teaching_hours',[teaching_statistics::class,'get_all_teaching_hours'])->name('get_all_teaching_hours');
         Route::get('/teaching_details/{id_teacher}',[teaching_statistics::class,'teaching_detail'])->name('teaching_details');
         Route::get('/salary_check',[payments::class,'salary_check'])->name('salary_check');
+    });
+    Route::prefix('user')->group(function(){
+      Route::get('/',[users::class,'index'])->name('get_all_user');
     });
 });
 

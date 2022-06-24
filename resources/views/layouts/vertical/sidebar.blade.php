@@ -32,7 +32,7 @@
             <ul>
                 <li><a href="{{route('payment')}}">Payment</a></li>
                 <li><a href="{{route('teaching_statistics')}}">Teaching Statistics</a></li>
-                <li><a href="#">Management Member</a></li>
+                <li><a href="{{route('get_all_user')}}">Management Member</a></li>
             </ul>
          </li>
       </ul>
