@@ -802,6 +802,7 @@ class details_teaching_recording extends Controller
                     $array_temp=array();
                     foreach ($value->lich_hoc_du_kien as $classes) {
                         foreach ($classes as $time => $detail_class) {
+                          if(gettype($time)!="string"){
                             $detail_class->date = date('d-M-Y',$time);
                             if(!empty($detail_class->starttime)){
                                 $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
@@ -809,6 +810,8 @@ class details_teaching_recording extends Controller
                                $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
                             }
                             $array_temp[]=$detail_class;
+                          }
+                            
                         }
 
                     }

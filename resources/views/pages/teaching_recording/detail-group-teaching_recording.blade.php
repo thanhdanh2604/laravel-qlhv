@@ -111,7 +111,11 @@
                                         <span id="{{$key}}_sotientrengio" class="txt-primary">
                                             @php
                                                 $amountMoney = isset($renew->bao_luu)?($renew->bao_luu+$renew->so_tien):$renew->so_tien;
-                                                $amountMoneyPerHours = $amountMoney /$renew->so_gio;
+                                                if($renew->so_gio!=0){
+                                                  $amountMoneyPerHours = $amountMoney /$renew->so_gio;
+                                                }else{
+                                                  $amountMoneyPerHours=0;
+                                                }
                                             @endphp
                                             {{number_format($amountMoneyPerHours)}}
                                         </span>
