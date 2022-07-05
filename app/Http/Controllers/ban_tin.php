@@ -50,11 +50,9 @@ class ban_tin extends Controller
                         if (date('d-M-Y',$buoi_hoc->time) === date('d-M-Y',$days)) {
                             if(!isset($buoi_hoc->id_prof)){
                               $buoi_hoc->id_prof = $value1->ma_giao_vien;
-                              
                             };
                             if(!isset($buoi_hoc->id_subject)){
                               $buoi_hoc->id_subject = $value1->ma_mon;
-                              
                             };
                             if(!isset($buoi_hoc->id_student)){
                               $buoi_hoc->id_student = $value['id_student'];

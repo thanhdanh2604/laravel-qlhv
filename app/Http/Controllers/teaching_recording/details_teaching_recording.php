@@ -802,16 +802,14 @@ class details_teaching_recording extends Controller
                     $array_temp=array();
                     foreach ($value->lich_hoc_du_kien as $classes) {
                         foreach ($classes as $time => $detail_class) {
-                          
                             $detail_class->date = date('d-M-Y',$time);
+                            // $detail_class->time = $time;
                             if(!empty($detail_class->starttime)){
                                 $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
                             }else{
                                $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
                             }
                             $array_temp[]=$detail_class;
-                          
-                            
                         }
 
                     }
@@ -862,30 +860,21 @@ class details_teaching_recording extends Controller
     }
     public function test(){
       $data = '[{"ma_mon":"20","ma_giao_vien":"74","ma_hoc_sinh":"296","id_packet":"621","lich_hoc_du_kien":[{"1658246400":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657641600":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657036800":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1656432000":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":1,"dd_prof":1,"starttime":"10:30","endtime":"12:00","hours":"1.5","doanh_thu":1875000}},{"1658419200":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657814400":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657209600":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1656604800":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":1,"dd_prof":1,"starttime":"10:30","endtime":"12:00","hours":"1.5","doanh_thu":1875000}}]}]';
-        
-            $obj_teaching_history = json_decode($data);
-            
-                foreach($obj_teaching_history as $value){
-                    $array_temp=array();
-                    foreach ($value->lich_hoc_du_kien as $classes) {
-                        foreach ($classes as $time => $detail_class) {
-                          
-                            $detail_class->date = date('d-M-Y',$time);
-                            // if(!empty($detail_class->starttime)){
-                            //     $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
-                            // }else{
-                            //    $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
-                            // }
-                            $array_temp[]=$detail_class;
-                          
-                            
-                        }
+          $obj_teaching_history = json_decode($data);
+              foreach($obj_teaching_history as $value){
+                  $array_temp=array();
+                  foreach ($value->lich_hoc_du_kien as $classes) {
+                      foreach ($classes as $time => $detail_class) {
+                          echo date('d-M-Y',$time)."hr";
+                          echo $time;
+                          echo "<br>";
+                      }
 
-                    }
-                    $value->lich_hoc_du_kien = $array_temp;
-                }
-                $json_save = json_encode($obj_teaching_history);
-               
+                  }
+                  $value->lich_hoc_du_kien = $array_temp;
+              }
+              $json_save = json_encode($obj_teaching_history);
+              echo $json_save;
 
     }
 }
