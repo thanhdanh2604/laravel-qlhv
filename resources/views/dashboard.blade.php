@@ -67,7 +67,7 @@
                     "<div style=\"color:#1e824c;font-weight:bold\">Start:".$value->starttime."<br></div>
                     <div style=\"color:#f22613;font-weight:bold\">End: ".$value->endtime."</div>": "<div>No time</div>";
                     ?>
-                    <button type="button" class="btn btn-primary btn-sm modal_edit_time_date_fill_data" data-toggle="modal" data-target="#edit_time_date" time="{{$value->time}}" id_nkgd="{{$value->id}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" id_student="{{$value->id_student}}" start_time="{{$value->starttime}}" end_time="{{$value->endtime}}">
+                    <button type="button" class="btn btn-primary btn-sm modal_edit_time_date_fill_data" data-toggle="modal" data-target="#edit_time_date" time="{{$value->time}}" id_nkgd="{{$value->id}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" start_time="{{$value->starttime}}" end_time="{{$value->endtime}}">
                         Edit time
                     </button>
                     </td>
@@ -77,12 +77,17 @@
                     </td>
                     <td>
                         <a  target="__blank" class="badge badge-warning" href="{{route('teacher_detail',$value->id_prof)}}">
-                        <?php  echo isset($teachers[$value->id_prof])?$teachers[$value->id_prof]:"Deleted" ?></a>
+                        <?php  echo isset($teachers[$value->id_prof])?$teachers[$value->id_prof]:"Deleted";?></a>
                     </td>
                     <td>
                         <a target="__blank" class="badge badge-dark" href="{{route('student_detail',$value->id_student)}}">
                         <?php
-                             echo isset($students[$value->id_student])?$students[$value->id_student]:"Deleted"
+                        if(is_array($value->id_student)){
+                          var_dump($value->id_student);
+                        }else{
+                          echo isset($students[$value->id_student])?$students[$value->id_student]:"Deleted";
+                        }
+                             
                         ?></a>
                          <?php
                             $array_time_study = details_teaching_recording::getStudyInfo($value->id);
@@ -91,7 +96,9 @@
                             }else{
                                 echo "<span class=\"badge badge-success\">".$array_time_study['time_left']." Hours</span>";
                             }
+                            
                          ?>
+                            <a class="btn btn-default" href="teaching_recordings/detail/{{$value->id}}">Xem NKGD</a>
                     </td>
                     <td>
                         <select id_nkgd="{{$value->id}}" time="{{$value->time}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" class="roll_up form-control" style="display:block">
@@ -138,7 +145,7 @@
                     </td>
                     <td>
                         <div class="btn-group">
-                            <div student_name="<?php echo isset($students[$value->id_student])?$students[$value->id_student]:"Deleted"  ?>" teacher_name="<?php echo isset($teachers[$value->id_prof])?$teachers[$value->id_prof]:"Deleted"?>" id_nkgd="{{$value->id}}" title="Change Date" time="{{$value->time}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" id_student="{{$value->id_student}}" data-toggle="modal" href='#modal-doi-lich' title="Change" class="btn btn-info modal_change_date_fill_data"><i class="icofont icofont-forward"></i></div>
+                            <div student_name="<?php echo (!is_array($value->id_student)?$students[$value->id_student]:"Deleted")  ?>" teacher_name="<?php echo isset($teachers[$value->id_prof])?$teachers[$value->id_prof]:"Deleted"?>" id_nkgd="{{$value->id}}" title="Change Date" time="{{$value->time}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" id_student="{{!is_array($value->id_student)?$students[$value->id_student]:''}}" data-toggle="modal" href='#modal-doi-lich' title="Change" class="btn btn-info modal_change_date_fill_data"><i class="icofont icofont-forward"></i></div>
                             <div id_nkgd="{{$value->id}}" title="Reset" time="{{$value->time}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" class="btn btn-primary button__reset-date" title="Reset"><i class="icofont icofont-retweet"></i></div>
                             <div id_nkgd="{{$value->id}}" title="Delete" time="{{$value->time}}" id_subject="{{$value->id_subject}}" id_teacher="{{$value->id_prof}}" class="button__delete-date btn btn-danger"><i class="icofont icofont-ui-delete"></i> </div>
                         </div>

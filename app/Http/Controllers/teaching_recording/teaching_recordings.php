@@ -124,7 +124,10 @@ class teaching_recordings extends Controller
                 ]);
                 break;
             case 1: // Lớp 1-1
+                // echo $data_teaching_recording->id_student;
+                // $data_student = student::where('id_student',$data_teaching_recording->id_student)->get();
                 $data_student = DB::table('student')->where('id_student',$data_teaching_recording->id_student)->first();
+               
                 $allStudent = student::all();
                 return view('pages.teaching_recording.detail-teaching_recording',[
                     'teaching_recording'=>$data_teaching_recording,

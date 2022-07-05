@@ -17,9 +17,15 @@ class ban_tin extends Controller
      */
     public function index()
     {
-        $days = isset($_GET['days'])?$_GET['days']:'now';
+        $days = isset($_GET['days'])?$_GET['days']:'today';
+        
+        
         //Lớp ngày hôm nay
         $today_class = $this->todayclass(strtotime($days));
+        
+        // foreach($today_class as $value){
+        //   echo date('d-M-Y',$value->time)."</br>";
+        // }
         $data_student = student::pluck('full_name','id_student');
         $data_teacher = teacher::pluck('fullname','id_teacher');
         $data_subject = subject::pluck('name','id');
@@ -41,10 +47,18 @@ class ban_tin extends Controller
             }else{
                 foreach ($diemdanh as $value1) {
                     foreach ($value1->lich_hoc_du_kien as $buoi_hoc) {
-                        if (date('d-m-Y',$buoi_hoc->time) === date('d-m-Y',$days)) {
-                            $buoi_hoc->id_prof = $value1->ma_giao_vien;
-                            $buoi_hoc->id_subject = $value1->ma_mon;
-                            $buoi_hoc->id_student = $value['id_student'];
+                        if (date('d-M-Y',$buoi_hoc->time) === date('d-M-Y',$days)) {
+                            if(!isset($buoi_hoc->id_prof)){
+                              $buoi_hoc->id_prof = $value1->ma_giao_vien;
+                              
+                            };
+                            if(!isset($buoi_hoc->id_subject)){
+                              $buoi_hoc->id_subject = $value1->ma_mon;
+                              
+                            };
+                            if(!isset($buoi_hoc->id_student)){
+                              $buoi_hoc->id_student = $value['id_student'];
+                            };
                             $buoi_hoc->id = $value['id'];
                             $array[] = $buoi_hoc;
                         }

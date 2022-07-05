@@ -127,4 +127,6 @@ Route::get('/cacheclear', function(){
 Route::get('/conficache', function(){
   artisan::call('config:cache');
 });
+Route::get('/test',[details_teaching_recording::class,'test']);
+
 require __DIR__.'/auth.php';

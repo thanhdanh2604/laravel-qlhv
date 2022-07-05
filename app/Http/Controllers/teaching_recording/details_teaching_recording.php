@@ -23,17 +23,17 @@ class details_teaching_recording extends Controller
             $study_hour = 0;// Check lỗi
             $time_left = 0;
         }else{
-            if ($data_teaching_recording->type==1) {
+            if ($data_teaching_recording->type===1) {
                 foreach ($objdd as  $mon_hoc) {
                     foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
-                        if (isset($buoi_hoc->hours)&& !isset($mon_hoc->finish)) {
+                        if (isset($buoi_hoc->hours)) {
                             $study_hour+= $buoi_hoc->hours;
                         }
                     }
                 }
                 $time_left = $data_teaching_recording->total_hours- $study_hour;
             }
-            elseif($data_teaching_recording->type==2) {
+            elseif($data_teaching_recording->type===2) {
                 $study_hour=0;
                 foreach ($objdd as $mon_hoc) {
                     foreach ($mon_hoc->lich_hoc_du_kien as $buoi_hoc) {
@@ -802,7 +802,7 @@ class details_teaching_recording extends Controller
                     $array_temp=array();
                     foreach ($value->lich_hoc_du_kien as $classes) {
                         foreach ($classes as $time => $detail_class) {
-                          if(gettype($time)!="string"){
+                          
                             $detail_class->date = date('d-M-Y',$time);
                             if(!empty($detail_class->starttime)){
                                 $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
@@ -810,7 +810,7 @@ class details_teaching_recording extends Controller
                                $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
                             }
                             $array_temp[]=$detail_class;
-                          }
+                          
                             
                         }
 
@@ -861,9 +861,31 @@ class details_teaching_recording extends Controller
         return $obj_teaching_history;
     }
     public function test(){
-        $data= student::find(10);
-        $data->reserve= 1;
-        $data->save();
-        // var_dump( $data);
+      $data = '[{"ma_mon":"20","ma_giao_vien":"74","ma_hoc_sinh":"296","id_packet":"621","lich_hoc_du_kien":[{"1658246400":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657641600":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657036800":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1656432000":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":1,"dd_prof":1,"starttime":"10:30","endtime":"12:00","hours":"1.5","doanh_thu":1875000}},{"1658419200":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657814400":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1657209600":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":0,"dd_prof":0,"starttime":"10:30","endtime":"12:00"}},{"1656604800":{"id":"330","id_student":"296","id_subject":"20","id_prof":"74","dd_student":1,"dd_prof":1,"starttime":"10:30","endtime":"12:00","hours":"1.5","doanh_thu":1875000}}]}]';
+        
+            $obj_teaching_history = json_decode($data);
+            
+                foreach($obj_teaching_history as $value){
+                    $array_temp=array();
+                    foreach ($value->lich_hoc_du_kien as $classes) {
+                        foreach ($classes as $time => $detail_class) {
+                          
+                            $detail_class->date = date('d-M-Y',$time);
+                            // if(!empty($detail_class->starttime)){
+                            //     $detail_class->time = strtotime(date('d-M-Y',$time)." ".$detail_class->starttime);
+                            // }else{
+                            //    $detail_class->time = strtotime(date('d-M-Y',$time)." 12:00AM");
+                            // }
+                            $array_temp[]=$detail_class;
+                          
+                            
+                        }
+
+                    }
+                    $value->lich_hoc_du_kien = $array_temp;
+                }
+                $json_save = json_encode($obj_teaching_history);
+               
+
     }
 }
